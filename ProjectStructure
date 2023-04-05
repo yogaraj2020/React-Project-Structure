@@ -1,0 +1,46 @@
+src/
+|-- index.js
+|-- App.js
+|-- App.css
+|-- assets/
+|   |-- images/
+|   |-- fonts/
+|-- common/
+|   |-- utils.js
+|-- features/
+|   |-- feature1/
+|   |   |-- components/
+|   |   |   |-- Feature1Component1.js
+|   |   |   |-- Feature1Component2.js
+|   |   |-- containers/
+|   |   |   |-- Feature1Container1.js
+|   |   |   |-- Feature1Container2.js
+|   |   |-- services/
+|   |   |   |-- Feature1Service1.js
+|   |   |   |-- Feature1Service2.js
+|   |   |-- redux/
+|   |   |   |-- feature1Actions.js
+|   |   |   |-- feature1Reducer.js
+|   |   |   |-- feature1Types.js
+|   |   |   |-- index.js
+|   |   |-- Feature1.js
+|   |   |-- Feature1.css
+|   |   |-- index.js
+|   |-- feature2/
+|   |   |-- components/
+|   |   |   |-- Feature2Component1.js
+|   |   |   |-- Feature2Component2.js
+|   |   |-- containers/
+|   |   |   |-- Feature2Container1.js
+|   |   |   |-- Feature2Container2.js
+|   |   |-- services/
+|   |   |   |-- Feature2Service1.js
+|   |   |   |-- Feature2Service2.js
+|   |   |-- redux/
+|   |   |   |-- feature2Actions.js
+|   |   |   |-- feature2Reducer.js
+|   |   |   |-- feature2Types.js
+|   |   |   |-- index.js
+|   |   |-- Feature2.js
+|   |   |-- Feature2.css
+|   |   |-- index.js
