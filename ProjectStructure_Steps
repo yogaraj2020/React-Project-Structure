@@ -1,0 +1,75 @@
+Step 1 - Start by creating a new React project using create-react-app:
+
+npx create-react-app my-app
+cd my-app
+
+Step 2 - Next, create the basic project structure:
+
+mkdir src/assets
+mkdir src/common
+mkdir src/features
+touch src/index.js
+touch src/App.js
+touch src/App.css
+
+Step 3 - Create a feature directory:
+
+mkdir src/features/feature1
+touch src/features/feature1/Feature1.js
+touch src/features/feature1/Feature1.css
+touch src/features/feature1/index.js
+mkdir src/features/feature1/components
+mkdir src/features/feature1/containers
+mkdir src/features/feature1/services
+mkdir src/features/feature1/redux
+touch src/features/feature1/components/Feature1Component1.js
+touch src/features/feature1/components/Feature1Component2.js
+touch src/features/feature1/containers/Feature1Container1.js
+touch src/features/feature1/containers/Feature1Container2.js
+touch src/features/feature1/services/Feature1Service1.js
+touch src/features/feature1/services/Feature1Service2.js
+touch src/features/feature1/redux/feature1Actions.js
+touch src/features/feature1/redux/feature1Reducer.js
+touch src/features/feature1/redux/feature1Types.js
+touch src/features/feature1/redux/index.js
+
+
+Step 4 - Repeat step 3 for each feature you want to add to your app.
+
+Step 5 - Update src/index.js to include all the features:
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
+import rootReducer from './rootReducer';
+import App from './App';
+
+const store = createStore(rootReducer);
+
+ReactDOM.render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById('root')
+);
+
+
+Step 6 - Update src/App.js to render all the features:
+
+import React from 'react';
+import Feature1 from './features/feature1';
+import Feature2 from './features/feature2';
+
+function App() {
+  return (
+    <div className="App">
+      <Feature1 />
+      <Feature2 />
+    </div>
+  );
+}
+
+export default App;
+
+That's it! You can now start building your features by adding components, containers, services, and Redux code to their respective directories. Remember to keep each feature self-contained and to promote code reuse and modularity.
