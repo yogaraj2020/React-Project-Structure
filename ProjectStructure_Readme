@@ -1,0 +1,20 @@
+This project structure organizes code by features instead of by type (e.g. components, containers, etc.). Each feature has its own directory, which contains all the files related to that feature. Here's what each directory contains:
+
+• assets: Contains images and fonts used in the app.
+• common: Contains reusable utility functions and classes that can be used across features.
+• features: Contains all the features of the app.
+• index.js: Entry point for the app.
+• App.js: Top-level component that renders all the features.
+• App.css: Global styles for the app.
+
+Each feature directory contains the following:
+
+• components: React components specific to that feature.
+• containers: Containers that connect components to the Redux store and manage state.
+• services: API services used by the feature.
+• redux: Redux actions, reducers, and types specific to the feature.
+• FeatureX.js: The main feature component that renders all the other components and containers.
+• FeatureX.css: Feature-specific styles.
+• index.js: Exports the main feature component.
+
+By organizing code by features instead of by type, it becomes easier to reason about the app's structure and to make changes without affecting other parts of the app. Each feature is self-contained and can be developed and tested independently. Additionally, the feature-based structure promotes code reuse and modularity.
