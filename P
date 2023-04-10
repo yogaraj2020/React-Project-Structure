@@ -1,0 +1,24 @@
+src/
+|-- components/
+|   |-- common/
+|   |   |-- Footer.js
+|   |   |-- Header.js
+|   |   |-- Sidebar.js
+|-- features/
+|   |-- Feature1/
+|   |   |-- components/
+|   |   |-- services/
+|   |   |   |-- feature1Service.js
+|   |   |-- Feature1Page1.js
+|   |-- Feature2/
+|   |   |-- components/
+|   |   |-- services/
+|   |   |   |-- feature2Service.js
+|   |   |-- Feature2Page1.js
+|-- services/
+|   |-- http.js
+|   |-- httpinterceptor.js
+|-- styles/
+|   |-- styles.css
+|-- App.js
+|-- index.js
