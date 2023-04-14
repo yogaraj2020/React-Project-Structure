@@ -1,3 +1,5 @@
+// routesconfig.js
+
 import LoginPage from './pages/LoginPage';
 import HomePage from './pages/HomePage';
 import AdminPage from './pages/AdminPage';
@@ -16,7 +18,7 @@ const routes = [
   {
     path: '/admin',
     component: AdminPage,
-    canActivate: [isAuthenticated, isAuthorized(['admin'])],
+    canActivate: [isAuthenticated, () => isAuthorized(['admin'], 'AdminPage')],
   },
 ];
 
