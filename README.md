@@ -39,5 +39,5 @@ Instructions for contributing to the project:
 
 Brief statement about the project's license, along with any important information about usage or distribution.
 
-## VersionHistory
+## Version History
 test
