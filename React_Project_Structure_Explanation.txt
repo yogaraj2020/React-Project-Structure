@@ -1,0 +1,11 @@
+• index.js and App.js are the entry points of the React application.
+• auth folder contains the authentication related files including auth.js for managing authentication logic and authguard.js for route guarding based on authentication status.
+• route folder contains routeconfig.js which contains the application routes.
+• assets folder contains static assets like images and fonts.
+• components folder contains reusable components organized into common folder for commonly used components, layout folder for layout specific components like header, footer, sidebar, and graphs folder for graph specific components.
+• features folder is organized into feature specific subfolders, in this case, feature1. This folder contains feature specific components, pages, and services, along with feature specific styles in the form of Feature1.js and Feature1.css.
+• services folder contains application services including http.js for making HTTP requests, httpinterceptor.js for intercepting HTTP requests and responses, and commonservice.js for common service functions.
+• utils folder contains utility functions like helper.js for common functions and storage.js for storing data in local storage.
+• constants folder contains application constants like constants.js.
+• styles folder contains global application styles like styles.css.
+exceptions folder contains application exception handling related files like apperror.js.
