@@ -8,7 +8,7 @@ Brief description of what the project is and what it does
 - [Usage](#usage)
 - [Contributing](#contributing)
 - [License](#license)
-- [Version History](#VersionHistory)
+- [Version History](#Version History)
 
 ## Installation
 
