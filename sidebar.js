@@ -1,5 +1,4 @@
 import React from 'react';
-import { makeStyles } from '@mui/styles';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -9,38 +8,35 @@ import InboxIcon from '@mui/icons-material/Inbox';
 import DraftsIcon from '@mui/icons-material/Drafts';
 import MailIcon from '@mui/icons-material/Mail';
 import { Link } from 'react-router-dom';
+import { styled } from '@mui/material/styles';
 
 const drawerWidth = 240;
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-  },
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
-  },
-  drawerPaper: {
-    width: drawerWidth,
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3),
-  },
-}));
+const StyledDrawer = styled(Drawer)({
+  width: drawerWidth,
+  flexShrink: 0,
+});
+
+const StyledDrawerPaper = styled('div')({
+  width: drawerWidth,
+});
+
+const StyledContent = styled('main')({
+  flexGrow: 1,
+  padding: 3,
+});
 
 function Sidebar() {
-  const classes = useStyles();
-
   return (
-    <div className={classes.root}>
-      <Drawer
-        className={classes.drawer}
+    <div sx={{ display: 'flex' }}>
+      <StyledDrawer
         variant="permanent"
-        classes={{
-          paper: classes.drawerPaper,
+        sx={{
+          '& .MuiDrawer-paper': {
+            boxSizing: 'border-box',
+            width: drawerWidth,
+          },
         }}
-        anchor="left"
       >
         <List>
           <ListItem button component={Link} to="/inbox">
@@ -62,8 +58,8 @@ function Sidebar() {
             <ListItemText primary="Drafts" />
           </ListItem>
         </List>
-      </Drawer>
-      <main className={classes.content}>
+      </StyledDrawer>
+      <StyledContent>
         <h1>Welcome to my app!</h1>
         <p>Here's some content that you might find useful:</p>
         <ul>
@@ -71,7 +67,7 @@ function Sidebar() {
           <li><Link to="/mail">Mail</Link></li>
           <li><Link to="/drafts">Drafts</Link></li>
         </ul>
-      </main>
+      </StyledContent>
     </div>
   );
 }
