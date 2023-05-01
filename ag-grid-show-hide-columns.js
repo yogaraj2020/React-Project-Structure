@@ -29,34 +29,51 @@ const App = () => {
   };
 
   return (
-    <div className="ag-theme-alpine" style={{ height: 400 }}>
-      <AgGridReact
-        columnDefs={columnDefs}
-        rowData={rowData}
-        onGridReady={onGridReady}
-        sideBar={{
-          toolPanels: [
-            {
-              id: 'columns',
-              labelDefault: 'Columns',
-              labelKey: 'columns',
-              iconKey: 'columns',
-              toolPanel: 'agColumnsToolPanel',
-              toolPanelParams: {
-                suppressRowGroups: true,
-                suppressValues: true,
-                suppressPivots: true,
-                suppressPivotMode: true,
-                suppressSideButtons: false,
-                // Here we provide a callback that will be called every time a checkbox is clicked
-                // in the Column Tool Panel
-                onColumnChecked: showHideColumns
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+      <div style={{ flex: 1 }}>
+        <AgGridReact
+          columnDefs={columnDefs}
+          rowData={rowData}
+          onGridReady={onGridReady}
+        />
+      </div>
+      <div style={{ padding: '10px', textAlign: 'center' }}>
+        <button
+          onClick={() => gridApi.showToolPanel(true)}
+          style={{ marginRight: '5px' }}
+        >
+          Show Tool Panel
+        </button>
+        <button onClick={() => gridApi.hideToolPanel()}>Hide Tool Panel</button>
+      </div>
+      <div style={{ flex: 1 }}>
+        <AgGridReact
+          columnDefs={columnDefs}
+          rowData={rowData}
+          onGridReady={onGridReady}
+          sideBar={{
+            toolPanels: [
+              {
+                id: 'columns',
+                labelDefault: 'Columns',
+                labelKey: 'columns',
+                iconKey: 'columns',
+                toolPanel: 'agColumnsToolPanel',
+                toolPanelParams: {
+                  suppressRowGroups: true,
+                  suppressValues: true,
+                  suppressPivots: true,
+                  suppressPivotMode: true,
+                  suppressSideButtons: false,
+                  onColumnChecked: showHideColumns
+                }
               }
-            }
-          ],
-          defaultToolPanel: 'columns'
-        }}
-      />
+            ],
+            defaultToolPanel: 'columns',
+            position: 'right'
+          }}
+        />
+      </div>
     </div>
   );
 };
