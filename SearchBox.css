@@ -1,0 +1,20 @@
+/* Define the height for the input and button */
+.search-input {
+  height: 36px;
+}
+
+.search-button {
+  height: 36px;
+  width: 36px;
+  background-color: #f0f0f0; /* Set background color */
+}
+
+/* Override the default padding for the InputBase component */
+.MuiInputBase-root {
+  padding: 8px 8px 8px 16px;
+}
+
+/* Override the default padding for the InputAdornment component */
+.MuiInputAdornment-root.MuiInputAdornment-positionEnd {
+  padding: 0px;
+}
