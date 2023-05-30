@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
+import Checkbox from '@mui/material/Checkbox';
 import TextField from '@mui/material/TextField';
 
 const options = [
@@ -12,8 +13,13 @@ const options = [
 const MultiSelectDropdown = () => {
   const [selectedOptions, setSelectedOptions] = useState([]);
 
-  const handleOptionChange = (_, value) => {
-    setSelectedOptions(value);
+  const handleOptionChange = (option) => {
+    setSelectedOptions((prevSelectedOptions) => {
+      if (prevSelectedOptions.includes(option.value)) {
+        return prevSelectedOptions.filter((value) => value !== option.value);
+      }
+      return [...prevSelectedOptions, option.value];
+    });
   };
 
   return (
@@ -23,7 +29,16 @@ const MultiSelectDropdown = () => {
       options={options}
       getOptionLabel={(option) => option.label}
       value={selectedOptions}
-      onChange={handleOptionChange}
+      onChange={(_, value) => setSelectedOptions(value)}
+      renderOption={(props, option) => (
+        <li {...props}>
+          <Checkbox
+            checked={selectedOptions.includes(option.value)}
+            onChange={() => handleOptionChange(option)}
+          />
+          {option.label}
+        </li>
+      )}
       renderInput={(params) => (
         <TextField
           {...params}
