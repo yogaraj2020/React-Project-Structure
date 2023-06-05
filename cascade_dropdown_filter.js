@@ -140,3 +140,14 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+//Filter
+const filteredData = tableData.filter((item) => {
+        // Check if any selected item matches the item in the data row
+        return selectedItems.some((selectedItem) => {
+          return (
+            item.name.toLowerCase().includes(selectedItem.toLowerCase()) ||
+            item.role.toLowerCase().includes(selectedItem.toLowerCase())
+          );
+        });
+      });
