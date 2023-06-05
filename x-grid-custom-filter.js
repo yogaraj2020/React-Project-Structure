@@ -14,18 +14,28 @@ const rows = [
   { id: 3, name: 'Bob', age: 42 },
 ];
 
-const options = ['John', 'Jane', 'Bob', 'Alice', 'Alex'];
-
 const DataTable = () => {
-  const renderFilterInput = (params) => (
-    <Autocomplete
-      options={options}
-      renderInput={(params) => (
-        <TextField {...params} variant="outlined" placeholder="Filter" />
-      )}
-      onChange={(event, value) => params.applyValue({ value })}
-    />
-  );
+  const generateOptions = (field) => {
+    const uniqueValues = Array.from(
+      new Set(rows.map((row) => row[field]))
+    );
+    return uniqueValues.filter((value) => value !== null && value !== undefined);
+  };
+
+  const renderFilterInput = (params) => {
+    const columnField = params.column.field;
+    const columnOptions = generateOptions(columnField);
+
+    return (
+      <Autocomplete
+        options={columnOptions}
+        renderInput={(params) => (
+          <TextField {...params} variant="outlined" placeholder="Filter" />
+        )}
+        onChange={(event, value) => params.applyValue({ value })}
+      />
+    );
+  };
 
   const columnsWithFilters = columns.map((column) => ({
     ...column,
