@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import { Autocomplete, TextField } from '@mui/material';
 
 const columns = [
   { field: 'id', headerName: 'ID', width: 70 },
@@ -15,39 +14,55 @@ const rows = [
 ];
 
 const DataTable = () => {
-  const generateOptions = (field) => {
-    const uniqueValues = Array.from(
-      new Set(rows.map((row) => row[field]))
-    );
-    return uniqueValues.filter((value) => value !== null && value !== undefined);
+  const [filters, setFilters] = useState({});
+
+  const handleFilterChange = (columnField, value) => {
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      [columnField]: value,
+    }));
   };
 
-  const renderFilterInput = (params) => {
-    const columnField = params.column.field;
-    const columnOptions = generateOptions(columnField);
+  const renderHeader = (params) => {
+    const columnField = params.field;
+
+    const handleChange = (event) => {
+      const value = event.target.value;
+      handleFilterChange(columnField, value);
+    };
 
     return (
-      <Autocomplete
-        options={columnOptions}
-        renderInput={(params) => (
-          <TextField {...params} variant="outlined" placeholder="Filter" />
-        )}
-        onChange={(event, value) => params.applyValue({ value })}
-      />
+      <div>
+        <span>{params.colDef.headerName}</span>
+        <input
+          type="text"
+          value={filters[columnField] || ''}
+          onChange={handleChange}
+          placeholder="Filter"
+        />
+      </div>
     );
   };
 
-  const columnsWithFilters = columns.map((column) => ({
-    ...column,
-    filterable: true,
-    filterRenderer: renderFilterInput,
-  }));
+  const filteredRows = rows.filter((row) => {
+    return Object.keys(filters).every((columnField) => {
+      const value = filters[columnField];
+      if (value === '') return true; // If no filter applied, show all rows
+
+      const cellValue = row[columnField];
+      return String(cellValue).toLowerCase().includes(value.toLowerCase());
+    });
+  });
 
   return (
     <div style={{ height: 400, width: '100%' }}>
       <DataGrid
-        rows={rows}
-        columns={columnsWithFilters}
+        rows={filteredRows}
+        columns={columns.map((column) => ({
+          ...column,
+          headerClassName: 'header-cell',
+          renderHeader,
+        }))}
         components={{
           Toolbar: GridToolbar,
         }}
