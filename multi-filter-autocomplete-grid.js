@@ -1,56 +1,51 @@
 // FilterComponent.jsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MultiSelectAutocomplete from './MultiSelectAutocomplete';
+import { useFilters, applyFilters } from 'react-query-filters';
 
-const FilterComponent = ({ datatableData }) => {
+const FilterComponent = ({ initialData }) => {
   const [filterValues, setFilterValues] = useState({
     filter1: [],
     filter2: [],
     filter3: [],
   });
+  const [filteredData, setFilteredData] = useState([]);
 
-  const handleFilterChange = (filterName, selectedOptions) => {
-    setFilterValues((prevValues) => ({
-      ...prevValues,
-      [filterName]: selectedOptions,
-    }));
-
+  useEffect(() => {
     applyFilters();
-  };
+  }, [filterValues]);
 
-  const applyFilters = () => {
-    // Combine the selected options from all filters
-    const combinedOptions = Object.entries(filterValues).map(([filterName, selectedOptions]) => ({
-      filterName,
-      selectedOptions,
-    }));
-
-    // Filter the datatable data based on each filter
-    const filteredData = datatableData.filter((row) => {
-      return combinedOptions.every(({ filterName, selectedOptions }) => {
-        const cellValue = row[filterName]; // Assuming column names match the filter names
-
-        // Check if the cell value matches any of the selected options for the filter
-        return selectedOptions.includes(cellValue);
-      });
+  const handleFilterChange = (filterName) => (selectedOptions) => {
+    setFilterValues({
+      ...filterValues,
+      [filterName]: selectedOptions.map((option) => option.value), // Assuming selectedOptions is an array of objects with a 'value' property
     });
-
-    // ... logic to handle the filtered datatable data ...
   };
+
+  const filteredDataTable = useFilters({
+    data: initialData,
+    filters: filterValues,
+    dependencies: [filterValues],
+  });
+
+  useEffect(() => {
+    setFilteredData(filteredDataTable);
+  }, [filteredDataTable]);
 
   return (
     <div>
       <MultiSelectAutocomplete
-        onChange={(selectedOptions) => handleFilterChange('filter1', selectedOptions)}
+        onChange={handleFilterChange('filter1')}
       />
       <MultiSelectAutocomplete
-        onChange={(selectedOptions) => handleFilterChange('filter2', selectedOptions)}
+        onChange={handleFilterChange('filter2')}
       />
       <MultiSelectAutocomplete
-        onChange={(selectedOptions) => handleFilterChange('filter3', selectedOptions)}
+        onChange={handleFilterChange('filter3')}
       />
 
-      {/* ... other components ... */}
+      {/* Render the datagrid component using the filteredData */}
+      {/* ... */}
     </div>
   );
 };
