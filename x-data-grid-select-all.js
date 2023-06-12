@@ -1,5 +1,6 @@
-import { DataGrid, GridCheckboxHeader } from '@mui/x-data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { useState } from 'react';
+import Checkbox from '@mui/material/Checkbox';
 
 const rows = [
   { id: 1, name: 'John Doe', age: 25 },
@@ -28,24 +29,27 @@ export default function MyDataGrid() {
     setSelectedRows(newSelectedRows);
   };
 
+  const renderHeaderCheckbox = () => (
+    <Checkbox
+      indeterminate={selectedRows.length > 0 && selectedRows.length < rows.length}
+      checked={selectedRows.length === rows.length}
+      onChange={handleSelectAllClick}
+    />
+  );
+
+  const renderCheckboxCell = (params) => (
+    <Checkbox
+      checked={selectedRows.includes(params.row.id)}
+      onChange={(event) => handleRowCheckboxClick(event, params.row.id)}
+    />
+  );
+
   const columns = [
     {
       field: 'checkbox',
       headerName: '',
-      renderHeader: (params) => (
-        <GridCheckboxHeader
-          {...params}
-          checked={selectedRows.length === rows.length}
-          indeterminate={selectedRows.length > 0 && selectedRows.length < rows.length}
-          onCheckboxChange={handleSelectAllClick}
-        />
-      ),
-      renderCell: (params) => (
-        <Checkbox
-          checked={selectedRows.includes(params.row.id)}
-          onChange={(event) => handleRowCheckboxClick(event, params.row.id)}
-        />
-      ),
+      renderHeader: renderHeaderCheckbox,
+      renderCell: renderCheckboxCell,
       width: 50,
       sortable: false,
       filterable: false,
