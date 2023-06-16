@@ -65,3 +65,16 @@ export default function MyDataGrid() {
     </div>
   );
 }
+
+    const filteredRows = rows.filter((row) => {
+      let isVisible = true;
+      for (const filter of model.items) {
+        const fieldValue = row[filter.columnField].toString().toLowerCase();
+        const filterValue = filter.value.toString().toLowerCase();
+        if (!fieldValue.includes(filterValue)) {
+          isVisible = false;
+          break;
+        }
+      }
+      return isVisible;
+    });
