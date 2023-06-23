@@ -4,49 +4,51 @@ import { IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
 
+const EditableCell = ({ value }) => {
+  const [editing, setEditing] = useState(false);
+  const [cellValue, setCellValue] = useState(value);
+
+  const handleInputChange = (event) => {
+    setCellValue(event.target.value);
+  };
+
+  const handleEditClick = () => {
+    setEditing(true);
+  };
+
+  const handleSaveClick = () => {
+    // Save the updated value
+    console.log(`Cell Value: ${cellValue}`);
+    setEditing(false);
+  };
+
+  return (
+    <div>
+      {editing ? (
+        <textarea value={cellValue} onChange={handleInputChange} rows={3} />
+      ) : (
+        <div>{value}</div>
+      )}
+      {editing ? (
+        <IconButton color="primary" onClick={handleSaveClick}>
+          <SaveIcon />
+        </IconButton>
+      ) : (
+        <IconButton onClick={handleEditClick}>
+          <EditIcon />
+        </IconButton>
+      )}
+    </div>
+  );
+};
+
 const columns = [
   { field: 'id', headerName: 'ID', width: 70 },
   {
     field: 'description',
     headerName: 'Description',
     flex: 1,
-    renderCell: (params) => {
-      const [editing, setEditing] = useState(false);
-      const [value, setValue] = useState(params.value);
-
-      const handleInputChange = (event) => {
-        setValue(event.target.value);
-      };
-
-      const handleEditClick = () => {
-        setEditing(true);
-      };
-
-      const handleSaveClick = () => {
-        // Save the updated value
-        console.log(`Row ID: ${params.row.id}, Value: ${value}`);
-        setEditing(false);
-      };
-
-      return (
-        <div>
-          {editing ? (
-            <textarea value={value} onChange={handleInputChange} rows={3} />
-          ) : (
-            <div>{params.value}</div>
-          )}
-          {editing ? (
-            <IconButton color="primary" onClick={handleSaveClick}>
-              <SaveIcon />
-            </IconButton>
-          ) : (
-            <IconButton onClick={handleEditClick}>
-              <EditIcon />
-            </IconButton>
-          )}
-        </div>
-      );
-    },
+    renderCell: (params) => <EditableCell value={params.value} />,
   },
 ];
 
