@@ -1,47 +1,55 @@
 import React, { useState } from 'react';
 import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { IconButton } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import SaveIcon from '@mui/icons-material/Save';
 
 const columns = [
   { field: 'id', headerName: 'ID', width: 70 },
-  { field: 'description', headerName: 'Description', flex: 1, editable: true },
-];
+  {
+    field: 'description',
+    headerName: 'Description',
+    flex: 1,
+    renderCell: (params) => {
+      const [editing, setEditing] = useState(false);
+      const [value, setValue] = useState(params.value);
 
-const rows = [
-  { id: 1, description: 'Lorem ipsum dolor sit amet' },
-  { id: 2, description: 'Consectetur adipiscing elit' },
-  { id: 3, description: 'Sed do eiusmod tempor incididunt' },
-];
+      const handleInputChange = (event) => {
+        setValue(event.target.value);
+      };
 
-const EditableTextArea = ({ value, onChange }) => {
-  const handleChange = (event) => {
-    onChange(event.target.value);
-  };
+      const handleEditClick = () => {
+        setEditing(true);
+      };
 
-  return <textarea value={value} onChange={handleChange} rows={3} />;
-};
+      const handleSaveClick = () => {
+        // Save the updated value
+        console.log(`Row ID: ${params.row.id}, Value: ${value}`);
+        setEditing(false);
+      };
 
-const DataTable = () => {
-  const handleCellEditCommit = React.useCallback(
-    ({ id, field, value }) => {
-      // Handle cell value update
-      console.log(`Row ID: ${id}, Field: ${field}, Value: ${value}`);
+      return (
+        <div>
+          {editing ? (
+            <textarea value={value} onChange={handleInputChange} rows={3} />
+          ) : (
+            <div>{params.value}</div>
+          )}
+          {editing ? (
+            <IconButton color="primary" onClick={handleSaveClick}>
+              <SaveIcon />
+            </IconButton>
+          ) : (
+            <IconButton onClick={handleEditClick}>
+              <EditIcon />
+            </IconButton>
+          )}
+        </div>
+      );
     },
-    []
-  );
+  },
+];
 
-  return (
-    <div style={{ height: 400, width: '100%' }}>
-      <DataGrid
-        rows={rows}
-        columns={columns}
-        components={{
-          Toolbar: GridToolbar,
-          CellEditComponent: EditableTextArea,
-        }}
-        onCellEditCommit={handleCellEditCommit}
-      />
-    </div>
-  );
-};
+// Rows and DataTable component remain the same
 
 export default DataTable;
