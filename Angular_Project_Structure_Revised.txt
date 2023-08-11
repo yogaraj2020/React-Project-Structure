@@ -1,0 +1,126 @@
+src/
+|-- app/
+|   |-- core/
+|   |   |-- http/
+|   |   |   |-- http.interceptor.ts       <-- Interceptor for handling global HTTP concerns
+|   |   |   |-- http.service.ts           <-- Common service for making HTTP requests and error handling
+|   |   |
+|   |   |-- auth/
+|   |   |   |-- auth.service.ts           <-- MSAL integration for SSO and Auth
+|   |   |
+|   |   |-- services/
+|   |   |   |-- data.service.ts           <-- Shared data service
+|   |   |   |-- error-handler.service.ts <-- Service for handling errors
+|   |   |
+|   |   |-- constants/
+|   |   |   |-- api.constants.ts
+|   |   |   |-- app.constants.ts
+|   |   |   
+|   |   |-- error-handler/
+|   |   |   |-- error-handler.service.ts
+|   |   |   
+|   |-- features/
+|   |   |-- feature1/
+|   |   |   |-- components/
+|   |   |   |-- services/
+|   |   |   |-- feature1.module.ts        <-- Feature 1 module
+|   |   |   |-- feature1-routing.module.ts<-- Feature 1 routing
+|   |   |
+|   |   |-- feature2/
+|   |   |   |-- components/
+|   |   |   |-- services/
+|   |   |   |-- feature2.module.ts        <-- Feature 2 module
+|   |   |   |-- feature2-routing.module.ts<-- Feature 2 routing
+|   |   |
+|   |-- shared/
+|   |   |-- components/
+|   |   |   |-- barchart/
+|   |   |   |   |-- barchart.component.ts
+|   |   |   |   |-- barchart.component.html
+|   |   |   |   |-- barchart.component.scss
+|   |   |   |
+|   |   |   |-- datatable/
+|   |   |   |   |-- datatable.component.ts
+|   |   |   |   |-- datatable.component.html
+|   |   |   |   |-- datatable.component.scss
+|   |   |   |
+|   |   |   |-- layout/
+|   |   |   |   |-- header/
+|   |   |   |   |   |-- header.component.ts
+|   |   |   |   |   |-- header.component.html
+|   |   |   |   |   |   |-- header.component.css
+|   |   |   |   |   
+|   |   |   |   |-- menu/
+|   |   |   |   |   |-- menu.component.ts
+|   |   |   |   |   |-- menu.component.html
+|   |   |   |   |   |-- menu.component.scss
+|   |   |   |   |
+|   |   |   |   |-- footer/
+|   |   |   |   |   |-- footer.component.ts
+|   |   |   |   |   |-- footer.component.html
+|   |   |   |   |   |-- footer.component.scss
+|   |   |   |   |
+|   |   |-- directives/
+|   |   |   |-- my-directive.directive.ts
+|   |   |   |-- another-directive.directive.ts
+|   |   |
+|   |   |-- pipes/
+|   |   |   |-- my-pipe.pipe.ts
+|   |   |   |-- another-pipe.pipe.ts
+|
+|-- assets/
+|-- environments/
+|-- app.component.ts
+|-- app.module.ts
+|-- app-routing.module.ts
+
+
+
+Core Module
+The core module houses essential services and global concerns.
+
+HTTP Interceptor
+File: http.interceptor.ts
+Responsibility: Handles global HTTP concerns such as authentication and error handling.
+Auth Service
+File: auth.service.ts
+Responsibility: Integrates MSAL for Single Sign-On (SSO) and authentication.
+Shared Module
+The shared module contains shared components, directives, and pipes used across the application.
+
+Shared Components
+barchart/: Shared bar chart component.
+datatable/: Shared data table component.
+header/: Shared header component.
+menu/: Shared menu component.
+footer/: Shared footer component.
+Directives
+my-directive.directive.ts: Example custom attribute directive.
+another-directive.directive.ts: Another custom attribute directive.
+Pipes
+my-pipe.pipe.ts: Example custom pipe.
+another-pipe.pipe.ts: Another custom pipe.
+Feature Modules
+Each feature module encapsulates a specific application feature.
+
+Feature 1
+Module: feature1.module.ts
+Components: feature1.component.ts, feature1-detail.component.ts, ...
+Services: feature1.service.ts
+Routing: feature1-routing.module.ts
+Feature 2
+Module: feature2.module.ts
+Components: feature2.component.ts, feature2-detail.component.ts, ...
+Services: feature2.service.ts
+Routing: feature2-routing.module.ts
+Core Services
+Data Service
+File: data.service.ts
+Responsibility: Provides shared data-related functionalities.
+Error Handler Service
+File: error-handler.service.ts
+Responsibility: Handles application-wide error handling.
+App Module and Routing
+app.component.ts: Root component of the application.
+app.module.ts: Main Angular module of the application.
+app-routing.module.ts: Manages top-level routing for the application

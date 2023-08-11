@@ -1,0 +1,89 @@
+src/
+|-- app/
+|   |-- <appname>-portal/             <-- Application name as a subdirectory
+|   |   |
+|   |   |-- core/
+|   |   |   |-- http/
+|   |   |   |   |-- http.service.ts
+|   |   |   |   |-- http.interceptor.ts
+|   |   |   |
+|   |   |   |-- services/
+|   |   |   |   |-- data.service.ts
+|   |   |   |   |-- auth.service.ts
+|   |   |   |
+|   |   |   |-- constants/
+|   |   |   |   |-- api.constants.ts
+|   |   |   |   |-- app.constants.ts
+|   |   |   |
+|   |   |   |-- error-handler/
+|   |   |   |   |-- error-handler.service.ts
+|   |   |   |
+|   |   |-- features/
+|   |   |   |-- feature1/
+|   |   |   |   |-- components/
+|   |   |   |   |   |-- feature1.component.ts
+|   |   |   |   |   |-- feature1.component.html
+|   |   |   |   |   |-- feature1.component.css
+|   |   |   |   |
+|   |   |   |   |-- services/
+|   |   |   |   |   |-- feature1.service.ts
+|   |   |   |   |
+|   |   |   |   |-- feature1.module.ts
+|   |   |   |   |-- feature1-routing.module.ts
+|   |   |   |
+|   |   |   |-- feature2/
+|   |   |       |-- components/
+|   |   |       |   |-- feature2.component.ts
+|   |   |       |   |-- feature2.component.html
+|   |   |       |   |-- feature2.component.css
+|   |   |       |
+|   |   |       |-- services/
+|   |   |       |   |-- feature2.service.ts
+|   |   |       |
+|   |   |       |-- feature2.module.ts
+|   |   |       |-- feature2-routing.module.ts
+|   |   |
+|   |   |-- shared/
+|   |       |-- components/
+|   |           |-- barchart/
+|   |           |   |-- header.component.ts
+|   |           |   |-- header.component.html
+|   |           |   |-- header.component.css
+|   |           |
+|   |           |-- datatable/
+|   |           |   |-- header.component.ts
+|   |           |   |-- header.component.html
+|   |           |   |-- header.component.css
+|   |           |
+|   |           |-- layout/
+|   |           |   |-- header/
+|   |           |   |   |-- header.component.ts
+|   |           |   |   |-- header.component.html
+|   |           |   |   |-- header.component.css
+|   |           |   |
+|   |           |   |-- footer/
+|   |           |   |   |-- footer.component.ts
+|   |           |   |   |-- footer.component.html
+|   |           |   |   |-- footer.component.css
+|   |           |   |
+|   |           |   |-- menu/
+|   |           |   |   |-- menu.component.ts
+|   |           |   |   |-- menu.component.html
+|   |           |   |   |-- menu.component.css
+|   |           |   |   
+|   |-- app.component.ts
+|   |-- app.module.ts
+|   |-- app-routing.module.ts
+|
+|-- assets/
+|-- environments/
+|-- index.html
+|-- ...
+
+
+npm install -g @angular/cli
+ng new nextgen-portal
+cd nextgen-portal
+ng generate component shared/header
+ng generate module feature1/feature1-routing --flat --module=feature1
+
