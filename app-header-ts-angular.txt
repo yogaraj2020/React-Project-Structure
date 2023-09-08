@@ -1,0 +1,23 @@
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-header',
+  templateUrl: './header.component.html',
+  styleUrls: ['./header.component.css']
+})
+export class HeaderComponent implements OnInit {
+  userName = 'John Doe'; // Replace with user's actual name
+  searchQuery: string = '';
+
+  constructor() {}
+
+  ngOnInit(): void {}
+
+  toggleSidebar() {
+    // Implement the logic to toggle the sidebar (hamburger menu) here
+  }
+
+  performSearch() {
+    // Implement the logic to perform the search based on this.searchQuery
+  }
+}

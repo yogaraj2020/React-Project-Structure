@@ -1,0 +1,93 @@
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #333;
+  color: white;
+
+  .left-side {
+    button {
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 24px;
+      color: white;
+    }
+    
+    // Dropdown Menu Styles
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      z-index: 1; // Ensure the dropdown appears above other content
+      width: 200px; // Adjust the width as needed
+
+      ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      li {
+        padding: 10px;
+      }
+
+      // Style the links within the dropdown menu
+      a {
+        text-decoration: none;
+        color: #333;
+        display: block;
+        transition: background-color 0.3s ease; // Add a smooth hover effect
+
+        &:hover {
+          background-color: #f0f0f0; // Background color on hover
+        }
+      }
+    }
+  }
+
+  .middle {
+    flex: 1;
+    text-align: center;
+
+    input {
+      padding: 5px;
+      width: 300px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  }
+
+  .right-side {
+    display: flex;
+    align-items: center;
+
+    span {
+      margin-right: 10px;
+      font-weight: bold;
+    }
+
+    img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      cursor: pointer;
+    }
+  }
+}

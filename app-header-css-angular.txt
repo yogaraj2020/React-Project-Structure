@@ -1,0 +1,56 @@
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #333; /* Adjust the background color as needed */
+  color: white;
+}
+
+.left-side button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  color: white;
+}
+
+.middle {
+  flex: 1;
+  text-align: center;
+}
+
+.middle input {
+  padding: 5px;
+  width: 300px; /* Adjust the width as needed */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.middle button {
+  background-color: #007bff; /* Adjust the button styling as needed */
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.right-side {
+  display: flex;
+  align-items: center;
+}
+
+.right-side span {
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.right-side img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+}

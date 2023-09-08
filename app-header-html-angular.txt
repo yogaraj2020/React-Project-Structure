@@ -1,0 +1,20 @@
+<header class="app-header">
+  <!-- Left Side: Hamburger Menu -->
+  <div class="left-side">
+    <button (click)="toggleSidebar()">
+      <i class="fa fa-bars"></i>
+    </button>
+  </div>
+
+  <!-- Middle: Search Box -->
+  <div class="middle">
+    <input type="text" placeholder="Search" [(ngModel)]="searchQuery" (keyup.enter)="performSearch()" />
+    <button (click)="performSearch()">Search</button>
+  </div>
+
+  <!-- Right Side: User Profile -->
+  <div class="right-side">
+    <span>{{ userName }}</span>
+    <img src="path-to-profile-image" alt="User Profile" />
+  </div>
+</header>

@@ -1,0 +1,20 @@
+<header class="app-header">
+  <!-- Left Side: Hamburger Menu -->
+  <div class="left-side">
+    <button (click)="toggleSidebar()">
+      <i class="fa fa-bars"></i>
+    </button>
+    <!-- Dropdown Menu -->
+    <div class="dropdown-menu" *ngIf="showMenu">
+      <ul>
+        <li><a href="#">Menu Item 1</a></li>
+        <li><a href="#">Menu Item 2</a></li>
+        <li><a href="#">Menu Item 3</a></li>
+        <!-- Add more menu items as needed -->
+      </ul>
+    </div>
+  </div>
+
+  <!-- Rest of the header content -->
+  <!-- ... -->
+</header>
