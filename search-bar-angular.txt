@@ -1,0 +1,59 @@
+<div class="search-bar">
+  <mat-icon class="search-icon">search</mat-icon>
+  <input matInput placeholder="Search..." [(ngModel)]="searchQuery" (keyup.enter)="performSearch()">
+  <button mat-icon-button (click)="performSearch()">
+    <mat-icon>search</mat-icon>
+  </button>
+</div>
+
+
+
+import { Component, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-search-bar',
+  templateUrl: './search-bar.component.html',
+  styleUrls: ['./search-bar.component.css']
+})
+export class SearchBarComponent implements OnInit {
+  searchQuery: string = '';
+
+  constructor() {}
+
+  ngOnInit(): void {}
+
+  performSearch() {
+    // Implement your search logic here using this.searchQuery
+    console.log('Searching for: ', this.searchQuery);
+  }
+}
+
+
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.search-icon {
+  margin: 0 8px;
+  color: #888;
+}
+
+input {
+  flex: 1;
+  border: none;
+  outline: none;
+}
+
+button {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
