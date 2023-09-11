@@ -29,7 +29,6 @@ export class SearchBarComponent implements OnInit {
 }
 
 
-
 .search-bar {
   display: flex;
   align-items: center;
@@ -38,22 +37,22 @@ export class SearchBarComponent implements OnInit {
   border-radius: 4px;
   padding: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
 
-.search-icon {
-  margin: 0 8px;
-  color: #888;
-}
+  .search-icon {
+    margin: 0 8px;
+    color: #888;
+  }
 
-input {
-  flex: 1;
-  border: none;
-  outline: none;
-}
+  input {
+    flex: 1;
+    border: none;
+    outline: none;
+  }
 
-button {
-  background-color: transparent;
-  border: none;
-  outline: none;
-  cursor: pointer;
+  button {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+  }
 }
