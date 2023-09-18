@@ -1,0 +1,63 @@
+import { Injectable } from '@angular/core';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class LocalStorageService {
+  constructor() {}
+
+  // Set data in localStorage
+  setItem(key: string, value: any): void {
+    localStorage.setItem(key, JSON.stringify(value));
+  }
+
+  // Get data from localStorage
+  getItem<T>(key: string): T | null {
+    const item = localStorage.getItem(key);
+    return item ? JSON.parse(item) : null;
+  }
+
+  // Remove data from localStorage
+  removeItem(key: string): void {
+    localStorage.removeItem(key);
+  }
+}
+----------------
+import { Component } from '@angular/core';
+import { LocalStorageService } from './local-storage.service';
+
+@Component({
+  selector: 'app-root',
+  template: `
+    <button (click)="saveData()">Save Data</button>
+  `,
+})
+export class AppComponent {
+  constructor(private localStorageService: LocalStorageService) {}
+
+  saveData(): void {
+    const data = { key: 'value' };
+    this.localStorageService.setItem('myData', data);
+  }
+}
+
+----------------------------
+import { Component } from '@angular/core';
+import { LocalStorageService } from './local-storage.service';
+
+@Component({
+  selector: 'app-root',
+  template: `
+    <div>{{ retrievedData | json }}</div>
+    <button (click)="getData()">Get Data</button>
+  `,
+})
+export class AppComponent {
+  retrievedData: any;
+
+  constructor(private localStorageService: LocalStorageService) {}
+
+  getData(): void {
+    this.retrievedData = this.localStorageService.getItem('myData');
+  }
+}
