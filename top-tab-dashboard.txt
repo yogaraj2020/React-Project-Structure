@@ -148,3 +148,47 @@ export class DashboardComponent {
     }
   }
 }
+
+
+<div class="filter-section">
+  <div class="filter-header">Filter Options</div>
+  <div class="filter-type">
+    <button class="filter-button selected">Type 1</button>
+    <button class="filter-button">Type 2</button>
+  </div>
+</div>
+
+.filter-section {
+  background-color: #fff;
+  padding: 20px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+  
+  .filter-header {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .filter-type {
+    display: flex;
+    
+    .filter-button {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      background-color: #f0f0f0;
+      cursor: pointer;
+      text-align: center;
+      transition: background-color 0.3s;
+      
+      &.selected {
+        background-color: #339933; /* Highlighted background color for the selected item */
+        color: #fff; /* Text color for the selected item */
+      }
+      
+      &:not(.selected):hover {
+        background-color: #ccc; /* Background color on hover for non-selected items */
+      }
+    }
+  }
+}
