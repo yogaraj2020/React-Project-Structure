@@ -85,3 +85,31 @@ export class DashboardComponent {
 
 <app-top-links (typeSelected)="updateGridView($event)"></app-top-links>
 <app-grid-view [selectedType]="selectedType"></app-grid-view>
+
+
+<div class="filter-section">
+  <div class="filter-header">Filter Options</div>
+  <div class="filter-row">
+    <div class="selected-filter-type">Filter Type: Type 1</div>
+    <div class="selected-period">Period: 1 Week</div>
+  </div>
+  <div class="filter-row">
+    <div class="filter-type-select">
+      <label for="filterType">Filter Type:</label>
+      <select id="filterType">
+        <option value="type1">Type 1</option>
+        <option value="type2">Type 2</option>
+        <option value="type3">Type 3</option>
+      </select>
+    </div>
+    <div class="period-select">
+      <label for="period">Period:</label>
+      <select id="period">
+        <option value="1week">1 Week</option>
+        <option value="2weeks">2 Weeks</option>
+        <option value="1month">1 Month</option>
+      </select>
+    </div>
+  </div>
+</div>
+
