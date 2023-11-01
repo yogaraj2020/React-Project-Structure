@@ -113,3 +113,38 @@ export class DashboardComponent {
   </div>
 </div>
 
+.filter-section {
+  background-color: #fff;
+  padding: 20px;
+  border: 1px solid #ccc;
+  margin-bottom: 20px;
+  
+  .filter-header {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+    
+    .selected-filter-type,
+    .selected-period {
+      flex: 1;
+    }
+    
+    .filter-type-select,
+    .period-select {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      label {
+        margin-right: 10px;
+      }
+      select {
+        width: 100%;
+      }
+    }
+  }
+}
