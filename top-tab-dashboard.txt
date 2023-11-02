@@ -192,3 +192,85 @@ export class DashboardComponent {
     }
   }
 }
+
+
+<div class="dashboard">
+  <div class="top-links">
+    <!-- Your top links go here -->
+  </div>
+  <div class="chart-container" [ngClass]="{ 'collapsed': isCollapsed }">
+    <mat-icon class="expand-icon" (click)="toggleChartContainer()">{{ isCollapsed ? 'expand_more' : 'expand_less' }}</mat-icon>
+    <div class="filter-section">
+      <!-- Filter criteria tabs go here -->
+    </div>
+    <div class="chart-section">
+      <!-- Bar chart goes here -->
+    </div>
+  </div>
+  <div class="data-table" [ngClass]="{ 'expanded': isCollapsed }">
+    <!-- Data table content goes here -->
+  </div>
+</div>
+
+
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.scss']
+})
+export class DashboardComponent {
+  isCollapsed: boolean = false;
+
+  toggleChartContainer() {
+    this.isCollapsed = !this.isCollapsed;
+  }
+}
+
+
+
+.dashboard {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background-color: #f0f0f0;
+}
+
+.top-links {
+  /* Your top links styles */
+}
+
+.chart-container {
+  position: relative;
+  transition: height 0.3s;
+  
+  &.collapsed {
+    height: 50px; /* Adjust as needed when collapsed */
+  }
+
+  .expand-icon {
+    position: absolute;
+    top: 10px; /* Adjust for desired vertical placement */
+    left: 10px; /* Adjust for desired horizontal placement */
+    cursor: pointer;
+    font-size: 24px; /* Adjust the icon size as needed */
+  }
+
+  .filter-section {
+    /* Your filter section styles */
+  }
+
+  .chart-section {
+    /* Your chart section styles */
+  }
+}
+
+.data-table {
+  flex: 1;
+  display: none;
+
+  &.expanded {
+    display: block;
+  }
+}
