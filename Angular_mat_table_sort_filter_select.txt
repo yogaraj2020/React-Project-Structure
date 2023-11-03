@@ -300,3 +300,19 @@ export class DataTableComponent implements OnInit {
     this.dataSource.filter = JSON.stringify({ [this.selectedColumn]: this.filterValue });
   }
 }
+
+
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  <!-- Loop through the column definitions and generate table columns -->
+  <ng-container *ngFor="let column of columnDefinitions">
+    <ng-container [matColumnDef]="column.columnName">
+      <th mat-header-cell *matHeaderCellDef> {{ column.displayName }} </th>
+      <td mat-cell *matCellDef="let element"> {{ element[column.columnName] }} </td>
+    </ng-container>
+  </ng-container>
+
+  <!-- Header and row definitions -->
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>
+
