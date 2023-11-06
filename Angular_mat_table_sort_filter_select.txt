@@ -316,3 +316,28 @@ export class DataTableComponent implements OnInit {
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 </table>
 
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  <!-- First row of headers for sorting -->
+  <ng-container *ngFor="let column of columnDefinitions" [matColumnDef]="column.columnName">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+      {{ column.displayName }}
+    </th>
+    <td mat-cell *matCellDef="let element">
+      {{ element[column.columnName] }}
+    </td>
+  </ng-container>
+
+  <!-- Second row of headers for filtering -->
+  <ng-container *ngFor="let column of columnDefinitions" [matColumnDef]="column.columnName">
+    <th mat-header-cell *matHeaderCellDef>
+      <mat-form-field *ngIf="column.filterable" appearance="fill">
+        <input matInput (keyup)="applyFilter($event.target.value, column.columnName)" placeholder="Filter">
+      </mat-form-field>
+    </th>
+    <td mat-cell *matCellDef="let element"></td>
+  </ng-container>
+
+  <!-- Header and row definitions -->
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>
