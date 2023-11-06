@@ -440,3 +440,32 @@ export class DataTableComponent implements OnInit {
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 </table>
 
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+  <!-- Header row with sorting and filtering -->
+  <ng-container *ngFor="let column of columnDefinitions" [matColumnDef]="column.columnName">
+    <th mat-header-cell *matHeaderCellDef>
+      <div class="header-cell">
+        <div class="sort-header" *ngIf="column.sortable" mat-sort-header>{{ column.displayName }}</div>
+        <div class="filter-control" *ngIf="column.filterable">
+          <mat-form-field appearance="fill">
+            <ng-container *ngIf="column.filterType === 'date'">
+              <!-- Date Picker -->
+              <input matInput [matDatepicker]="picker" placeholder="Choose a date" (click)="picker.open()">
+              <mat-datepicker #picker></mat-datepicker>
+            </ng-container>
+            <ng-container *ngIf="column.filterType !== 'date'">
+              <!-- Text Input -->
+              <input matInput (keyup)="applyFilter($event.target.value, column.columnName)" placeholder="Filter">
+            </ng-container>
+          </mat-form-field>
+        </div>
+      </div>
+    </th>
+  </ng-container>
+
+  <!-- Row definitions -->
+  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>
+
