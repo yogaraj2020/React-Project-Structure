@@ -271,6 +271,51 @@ import { MatSort } from '@angular/material/sort';
   templateUrl: './data-table.component.html',
   styleUrls: ['./data-table.component.css']
 })
+
+
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+  <!-- Header row with sorting and filtering -->
+  <ng-container *ngFor="let column of columnDefinitions" [matColumnDef]="column.columnName">
+    <th mat-header-cell *matHeaderCellDef>
+      <div class="header-cell">
+        <div class="sort-header" *ngIf="column.sortable" mat-sort-header>{{ column.displayName }}</div>
+        <div class="filter-control">
+          <mat-form-field appearance="fill" *ngIf="column.filterable">
+            <input matInput (keyup)="applyFilter($event.target.value, column.columnName)" placeholder="Filter">
+          </mat-form-field>
+        </div>
+      </div>
+    </th>
+  </ng-container>
+
+  <!-- Row definitions -->
+  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>
+
+
+
+.header-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+
+  .sort-header {
+    /* Style for the sorting header (top row) */
+    font-weight: bold;
+    /* Add any additional styling you need for sorting here */
+  }
+
+  .filter-control {
+    /* Style for the filter input (bottom row) */
+    margin-top: 10px; /* Adjust spacing between sorting and filtering rows */
+    /* Add any additional styling you need for filtering here */
+  }
+}
+
 export class DataTableComponent implements OnInit {
   displayedColumns: string[] = ['name', 'age', 'city']; // Define your columns here
   dataSource: MatTableDataSource<any>;
