@@ -469,3 +469,38 @@ export class DataTableComponent implements OnInit {
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 </table>
 
+/* Adjust the size of the date picker, input, and font in the header row */
+.header-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+
+  .sort-header {
+    /* Styling for sorting header (top row) */
+    font-weight: bold;
+    font-size: 14px; /* Adjust the font size as needed */
+  }
+
+  .filter-control {
+    /* Styling for the filter input (bottom row) */
+    margin-top: 10px; /* Adjust the spacing between sorting and filtering rows */
+    
+    /* Input size */
+    input.mat-input-element {
+      font-size: 12px; /* Adjust the font size of the input */
+      padding: 5px; /* Adjust the padding of the input */
+      height: 25px; /* Adjust the height of the input */
+    }
+
+    /* Date picker size */
+    mat-datepicker {
+      font-size: 12px; /* Adjust the font size of the date picker */
+      .mat-datepicker-content {
+        padding: 10px; /* Adjust the padding of the date picker content */
+      }
+    }
+  }
+}
+
