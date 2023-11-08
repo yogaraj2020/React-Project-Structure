@@ -729,3 +729,66 @@ const EXAMPLE_DATA = [
     height: 14px;
   }
 }
+
+import { Component, OnInit } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss']
+})
+export class AppComponent implements OnInit {
+  dataSource = new MatTableDataSource<YourData>();
+  columnDefinitions: ColumnDefinition[] = [
+    { columnName: 'name', displayName: 'Name' },
+    { columnName: 'date', displayName: 'Date' }
+  ];
+
+  displayedColumns: string[] = this.columnDefinitions.map(column => column.columnName);
+
+  constructor() {
+    // Initialize your data source with data
+    this.dataSource.data = EXAMPLE_DATA;
+  }
+
+  ngOnInit() {
+    // Set the custom filter predicate
+    this.dataSource.filterPredicate = this.customFilterPredicate();
+  }
+
+  customFilterPredicate() {
+    return (data: YourData, filter: string) => {
+      const filterObject = JSON.parse(filter);
+
+      for (const key in filterObject) {
+        if (filterObject.hasOwnProperty(key)) {
+          const value = filterObject[key].toLowerCase();
+          const cellValue = data[key].toString().toLowerCase();
+
+          if (!cellValue.includes(value)) {
+            return false; // If any condition doesn't match, exclude the row
+          }
+        }
+      }
+
+      return true; // All conditions match, include the row
+    };
+  }
+}
+
+interface ColumnDefinition {
+  columnName: string;
+  displayName: string;
+}
+
+const EXAMPLE_DATA = [
+  { name: 'Item 1', date: new Date('2023-10-15') },
+  { name: 'Item 2', date: new Date('2023-10-20') },
+  { name: 'Item 3', date: new Date('2023-10-25') },
+];
+
+interface YourData {
+  name: string;
+  date: Date;
+}
