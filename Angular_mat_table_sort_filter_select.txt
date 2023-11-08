@@ -595,3 +595,56 @@ renderProgressBar(progress: number): string {
 .progress-fill {
   height: 100%;
 }
+
+
+import { Component } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+
+@Component({
+  selector: 'app-root',
+  template: `
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+      <ng-container *ngFor="let column of columnDefinitions; let i = index" [matColumnDef]="column.columnName">
+        <th mat-header-cell *matHeaderCellDef>
+          <ng-container *ngIf="i === 0">
+            <mat-checkbox (change)="selectAll($event)"></mat-checkbox>
+          </ng-container>
+          <ng-container *ngIf="i !== 0">{{ column.displayName }}</ng-container>
+        </th>
+        <td mat-cell *matCellDef="let element">
+          <ng-container *ngIf="i === 0">
+            <mat-checkbox [(ngModel)]="element.selected"></mat-checkbox>
+          </ng-container>
+          <ng-container *ngIf="i !== 0">{{ element[column.columnName] }}</ng-container>
+        </td>
+      </ng-container>
+    </table>
+  `,
+  styleUrls: ['app.component.scss']
+})
+export class AppComponent {
+  dataSource = new MatTableDataSource(EXAMPLE_DATA);
+  columnDefinitions: ColumnDefinition[] = [
+    { columnName: 'select', displayName: '' },
+    { columnName: 'name', displayName: 'Name' },
+    { columnName: 'progress', displayName: 'Progress' }
+  ];
+
+  selectAll(event) {
+    this.dataSource.data.forEach((element) => {
+      element.selected = event.checked;
+    });
+  }
+}
+
+interface ColumnDefinition {
+  columnName: string;
+  displayName: string;
+}
+
+const EXAMPLE_DATA = [
+  { selected: false, name: 'Item 1', progress: 30 },
+  { selected: false, name: 'Item 2', progress: 60 },
+  { selected: false, name: 'Item 3', progress: 90 },
+];
+
