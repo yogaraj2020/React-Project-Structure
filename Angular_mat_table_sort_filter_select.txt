@@ -705,3 +705,27 @@ const EXAMPLE_DATA = [
   { name: 'Item 2', progress: 60 },
   { name: 'Item 3', progress: 90 },
 ];
+
+/* app.component.scss */
+.small-checkbox {
+  // Define custom styles to reduce the size
+  font-size: 12px; // Adjust the font size
+  line-height: 14px; // Adjust the line height
+  padding: 4px; // Adjust the padding
+
+  // Optionally, you can reduce the size of the checkbox itself
+  .mat-checkbox-frame {
+    width: 14px; // Adjust the width of the checkbox
+    height: 14px; // Adjust the height of the checkbox
+  }
+
+  .mat-checkbox-ripple {
+    width: 14px; // Adjust the ripple effect size
+    height: 14px;
+  }
+
+  .mat-checkbox-inner-container {
+    width: 14px; // Adjust the container size
+    height: 14px;
+  }
+}
