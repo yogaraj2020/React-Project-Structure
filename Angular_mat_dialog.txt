@@ -1,0 +1,51 @@
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+
+@Component({
+  selector: 'column-selector-dialog',
+  templateUrl: 'column-selector-dialog.html',
+})
+export class ColumnSelectorDialogComponent {
+  constructor(
+    public dialogRef: MatDialogRef<ColumnSelectorDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {}
+
+  toggleColumnVisibility(columnName: string) {
+    this.data.columnVisibility[columnName] = !this.data.columnVisibility[columnName];
+    this.data.updateDisplayedColumns();
+  }
+}
+
+
+<h2>Select Columns</h2>
+<mat-checkbox *ngFor="let column of data.columnDefinitions" [checked]="data.columnVisibility[column.columnName]"
+  (change)="toggleColumnVisibility(column.columnName)">
+  {{ column.displayName }}
+</mat-checkbox>
+
+import { MatDialog } from '@angular/material/dialog';
+import { ColumnSelectorDialogComponent } from 'path-to-column-selector-dialog-component';
+
+export class YourComponent {
+  // ... Your existing code
+
+  constructor(public dialog: MatDialog) {}
+
+  openColumnSelectorDialog(): void {
+    const dialogRef = this.dialog.open(ColumnSelectorDialogComponent, {
+      width: '250px',
+      data: {
+        columnDefinitions: this.columnDefinitions,
+        columnVisibility: this.columnVisibility,
+        updateDisplayedColumns: this.updateDisplayedColumns.bind(this)
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+  }
+}
+
+<button mat-button (click)="openColumnSelectorDialog()">Select Columns</button>
