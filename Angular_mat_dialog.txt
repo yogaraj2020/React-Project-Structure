@@ -97,5 +97,102 @@ export class DashboardComponent {
   }
 }
 
+import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { DataTableComponent } from 'path-to-data-table-component';
+import { ColumnSelectorDialogComponent } from 'path-to-column-selector-dialog-component';
+
+@Component({
+  selector: 'app-dashboard',
+  template: `
+    <!-- Your dashboard content -->
+    <button mat-button (click)="openColumnSelectorDialog()">Select Columns</button>
+    <app-data-table [columnDefinitions]="columnDefinitions" [rowData]="rowData"></app-data-table>
+  `,
+})
+export class DashboardComponent implements OnInit {
+  constructor(public dialog: MatDialog) {}
+
+  columnDefinitions: ColumnDefinition[] = [
+    // Define your column definitions here
+  ];
+
+  rowData: any[] = [
+    // Define your row data here
+  ];
+
+  openColumnSelectorDialog(): void {
+    const dialogRef = this.dialog.open(ColumnSelectorDialogComponent, {
+      width: '300px',
+      data: { columnDefinitions: this.columnDefinitions },
+    });
+
+    dialogRef.afterClosed().subscribe((selectedColumns: string[]) => {
+      if (selectedColumns) {
+        // Update column visibility in your data-table component
+        this.columnDefinitions.forEach((column) => {
+          column.hidden = !selectedColumns.includes(column.columnName);
+        });
+      }
+    });
+  }
+}
+
+import { Component, Input, OnInit } from '@angular/core';
+
+@Component({
+  selector: 'app-data-table',
+  template: `
+    <!-- Your DataTable content -->
+    <table mat-table [dataSource]="rowData">
+      <!-- Loop through columnDefinitions and use *ngIf to control visibility -->
+      <ng-container *ngFor="let column of columnDefinitions">
+        <ng-container [matColumnDef]="column.columnName" *ngIf="!column.hidden">
+          <th mat-header-cell *matHeaderCellDef>{{ column.displayName }}</th>
+          <td mat-cell *matCellDef="let row">{{ row[column.columnName] }}</td>
+        </ng-container>
+      </ng-container>
+      <!-- ... Rest of your DataTable code -->
+    </table>
+  `,
+})
+export class DataTableComponent implements OnInit {
+  @Input() columnDefinitions: ColumnDefinition[] = [];
+  @Input() rowData: any[] = [];
+
+  ngOnInit() {
+    // Perform any necessary initialization for your DataTable
+  }
+}
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+
+@Component({
+  selector: 'column-selector-dialog',
+  template: `
+    <h2>Select Columns</h2>
+    <mat-checkbox
+      *ngFor="let column of data.columnDefinitions"
+      [(ngModel)]="selectedColumns"
+      [ngModelOptions]="{ standalone: true }"
+      [value]="column.columnName"
+    >
+      {{ column.displayName }}
+    </mat-checkbox>
+    <button mat-button (click)="closeDialog()">OK</button>
+  `,
+})
+export class ColumnSelectorDialogComponent {
+  selectedColumns: string[] = [];
+
+  constructor(
+    public dialogRef: MatDialogRef<ColumnSelectorDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {}
+
+  closeDialog() {
+    this.dialogRef.close(this.selectedColumns);
+  }
+}
 
 
