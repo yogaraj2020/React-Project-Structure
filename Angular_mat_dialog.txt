@@ -49,3 +49,53 @@ export class YourComponent {
 }
 
 <button mat-button (click)="openColumnSelectorDialog()">Select Columns</button>
+
+data-tabel
+import { Component, Output, EventEmitter } from '@angular/core';
+
+@Component({
+  selector: 'app-data-table',
+  // ... other component properties
+})
+export class DataTableComponent {
+  @Output() openColumnSelectorDialog: EventEmitter<void> = new EventEmitter();
+
+  // ... rest of the component logic
+
+  openDialog() {
+    // Emit the event to notify the parent (dashboard) to open the dialog
+    this.openColumnSelectorDialog.emit();
+  }
+}
+
+dashboard---
+import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { DataTableComponent } from 'path-to-data-table-component';
+
+@Component({
+  selector: 'app-dashboard',
+  template: `
+    <!-- Your dashboard content -->
+    <button mat-button (click)="openColumnSelectorDialog()">Select Columns</button>
+
+    <app-data-table (openColumnSelectorDialog)="openColumnSelectorDialog()"></app-data-table>
+  `,
+})
+export class DashboardComponent {
+  constructor(public dialog: MatDialog) {}
+
+  openColumnSelectorDialog(): void {
+    const dialogRef = this.dialog.open(ColumnSelectorDialogComponent, {
+      width: '250px',
+      // ... other dialog configuration
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+  }
+}
+
+
+
