@@ -196,3 +196,72 @@ export class ColumnSelectorDialogComponent {
 }
 
 
+// column-visibility.service.ts
+
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class ColumnVisibilityService {
+  private columnVisibilitySubject = new BehaviorSubject<any[]>([]);
+  columnVisibility$ = this.columnVisibilitySubject.asObservable();
+
+  updateColumnVisibility(columns: any[]): void {
+    this.columnVisibilitySubject.next(columns);
+  }
+}
+
+
+// dialog.component.ts
+
+import { Component, Input } from '@angular/core';
+import { ColumnVisibilityService } from './column-visibility.service';
+
+@Component({
+  selector: 'app-dialog',
+  template: `
+    <div *ngFor="let column of columnDefinitions">
+      <label>
+        <input type="checkbox" [(ngModel)]="column.isShow" (change)="onCheckboxChange()">
+        {{ column.displayName }}
+      </label>
+    </div>
+  `,
+})
+export class DialogComponent {
+  @Input() columnDefinitions: any[] = [];
+
+  constructor(private columnVisibilityService: ColumnVisibilityService) {}
+
+  onCheckboxChange(): void {
+    // Emit the updated columnDefinitions when a checkbox changes
+    this.columnVisibilityService.updateColumnVisibility(this.columnDefinitions);
+  }
+}
+
+
+// parent.component.ts
+
+import { Component, OnInit } from '@angular/core';
+import { ColumnVisibilityService } from './column-visibility.service';
+
+@Component({
+  selector: 'app-parent',
+  template: `
+    <app-dialog [columnDefinitions]="columnDefinitions"></app-dialog>
+  `,
+})
+export class ParentComponent implements OnInit {
+  columnDefinitions: any[] = [];
+
+  constructor(private columnVisibilityService: ColumnVisibilityService) {}
+
+  ngOnInit(): void {
+    this.columnVisibilityService.columnVisibility$.subscribe((columns) => {
+      // Handle the updated columnDefinitions when changes occur
+      this.columnDefinitions = columns;
+    });
+  }
+}
