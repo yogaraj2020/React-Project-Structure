@@ -1,0 +1,20 @@
+// date-format.pipe.ts
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'dateFormat'
+})
+export class DateFormatPipe implements PipeTransform {
+  transform(value: any): string {
+    // Check if the value is a valid date
+    const isDate = !isNaN(Date.parse(value));
+
+    if (isDate) {
+      const date = new Date(value);
+      return date.toLocaleDateString('en-US'); // Adjust the format as needed
+    } else {
+      // Handle non-date values gracefully, for example, return the original value
+      return value;
+    }
+  }
+}
