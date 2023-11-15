@@ -1,20 +1,21 @@
-// date-format.pipe.ts
 import { Pipe, PipeTransform } from '@angular/core';
+import { DatePipe } from '@angular/common';
 
 @Pipe({
-  name: 'dateFormat'
+  name: 'customDateFormat'
 })
-export class DateFormatPipe implements PipeTransform {
-  transform(value: any): string {
-    // Check if the value is a valid date
-    const isDate = !isNaN(Date.parse(value));
+export class CustomDateFormatPipe implements PipeTransform {
+  constructor(private datePipe: DatePipe) {}
 
-    if (isDate) {
-      const date = new Date(value);
-      return date.toLocaleDateString('en-US'); // Adjust the format as needed
+  transform(value: any, format: string = 'yyyy-MM-dd'): string {
+    if (value instanceof Date) {
+      return this.datePipe.transform(value, format);
+    } else if (typeof value === 'number') {
+      // Handle number formatting as needed
+      return value.toString();
     } else {
-      // Handle non-date values gracefully, for example, return the original value
-      return value;
+      // Handle other types or return an empty string
+      return '';
     }
   }
 }
