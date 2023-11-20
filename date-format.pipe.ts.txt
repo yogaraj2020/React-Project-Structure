@@ -19,3 +19,33 @@ export class CustomDateFormatPipe implements PipeTransform {
     }
   }
 }
+
+
+function addTimeToDate(date: Date, amount: number, unit: 'days' | 'months' | 'years'): Date {
+  const newDate = new Date(date.getTime());
+
+  switch (unit) {
+    case 'days':
+      newDate.setDate(newDate.getDate() + amount);
+      break;
+    case 'months':
+      newDate.setMonth(newDate.getMonth() + amount);
+      break;
+    case 'years':
+      newDate.setFullYear(newDate.getFullYear() + amount);
+      break;
+    default:
+      throw new Error(`Unsupported time unit: ${unit}`);
+  }
+
+  return newDate;
+}
+
+// Example usage:
+const currentDate = new Date();
+const futureDate = addTimeToDate(currentDate, 3, 'months');
+const pastDate = addTimeToDate(currentDate, -2, 'years');
+
+console.log(`Current Date: ${currentDate}`);
+console.log(`Future Date (+3 months): ${futureDate}`);
+console.log(`Past Date (-2 years): ${pastDate}`);
