@@ -1,0 +1,19 @@
+downloadGraphAsPDF() {
+  const chartSection = document.getElementById('chart-section'); // Replace 'chart-section' with the actual ID of your chart section
+
+  if (chartSection) {
+    html2canvas(chartSection).then((canvas) => {
+      // Convert the canvas to a data URL
+      const imgData = canvas.toDataURL('image/png');
+
+      // Create PDF
+      const pdf = new jspdf('landscape');
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save('graph.pdf');
+    });
+  }
+}
