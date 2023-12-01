@@ -1,0 +1,58 @@
+import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import * as Chart from 'chart.js';
+
+@Component({
+  selector: 'app-bar-chart',
+  template: `
+    <div>
+      <canvas #myChart width="400" height="200"></canvas>
+    </div>
+  `,
+})
+export class BarChartComponent implements AfterViewInit {
+  @ViewChild('myChart') chartRef: ElementRef;
+
+  chart: Chart;
+
+  ngAfterViewInit() {
+    this.createChart();
+  }
+
+  createChart() {
+    const ctx: CanvasRenderingContext2D = this.chartRef.nativeElement.getContext('2d');
+    this.chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Label 1', 'Label 2', 'Label 3'],
+        datasets: [
+          {
+            label: 'Dataset 1',
+            data: [30, 50, 20],
+            backgroundColor: 'rgba(75, 192, 192, 0.7)',
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        onClick: (event, elements) => this.handleBarClick(event, elements),
+        scales: {
+          y: {
+            beginAtZero: true,
+          },
+        },
+      },
+    });
+  }
+
+  handleBarClick(event, elements) {
+    if (elements && elements.length > 0) {
+      const selectedBarIndex = elements[0].index;
+      const dataset = this.chart.data.datasets[0];
+      const backgroundColors = Array.from({ length: dataset.data.length }, (_, index) =>
+        index === selectedBarIndex ? 'rgba(128, 128, 128, 0.7)' : 'rgba(75, 192, 192, 0.7)'
+      );
+      dataset.backgroundColor = backgroundColors;
+      this.chart.update();
+    }
+  }
+}
