@@ -1,0 +1,33 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Fetch and Process API') {
+            steps {
+                script {
+                    // Define your API endpoint
+                    def apiUrl = 'http://your-api-endpoint'
+
+                    // Use curl to make a GET request to the API
+                    def apiResponse = sh(script: "curl -s $apiUrl", returnStdout: true).trim()
+
+                    // Log the API response for debugging (optional)
+                    echo "API Response: ${apiResponse}"
+
+                    // Use jq to parse and process the JSON response
+                    def jsonResponse = sh(script: "echo '$apiResponse' | jq .", returnStdout: true).trim()
+
+                    // Log the processed JSON (optional)
+                    echo "Processed JSON: ${jsonResponse}"
+
+                    // Further processing or actions based on the JSON response
+                    // For example, you can use variables from the JSON in subsequent steps
+                    def someValue = sh(script: "echo '$jsonResponse' | jq -r '.someKey'", returnStdout: true).trim()
+                    echo "Value from JSON: ${someValue}"
+
+                    // Continue with additional pipeline steps as needed
+                }
+            }
+        }
+    }
+}
