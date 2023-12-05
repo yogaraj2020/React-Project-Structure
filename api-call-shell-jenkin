@@ -31,3 +31,58 @@ pipeline {
         }
     }
 }
+
+--------------------
+pipeline {
+    agent any
+
+    stages {
+        stage('API 1') {
+            steps {
+                script {
+                    try {
+                        echo 'Running API 1'
+                        // Add your API 1 script or command here
+
+                        // Simulate a failure for demonstration purposes
+                        // Uncomment the line below to simulate a failure
+                        // error 'Simulating API 1 failure'
+                    } catch (Exception e) {
+                        currentBuild.result = 'FAILURE'
+                        echo "API 1 failed: ${e.getMessage()}"
+                        // Log additional details if needed
+                        echo "Additional Details: ${e.getStackTrace().join('\n')}"
+                    }
+                }
+            }
+        }
+
+        // Add similar stages for other APIs
+
+        stage('Cleanup') {
+            steps {
+                echo 'Performing Cleanup'
+                // Optionally, add cleanup steps or finalization tasks
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'All APIs executed successfully'
+            // Optionally, add post-success steps or notifications
+        }
+        failure {
+            echo 'One or more APIs failed'
+            // Optionally, add post-failure steps or notifications
+
+            // Send email notification on failure
+            emailext subject: "Pipeline Failed: ${currentBuild.fullDisplayName}",
+                      body: "One or more APIs failed. Check Jenkins for details.",
+                      to: 'your-email@example.com',
+                      replyTo: 'jenkins@example.com',
+                      mimeType: 'text/plain'
+        }
+    }
+}
+
