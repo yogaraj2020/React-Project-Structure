@@ -86,3 +86,63 @@ pipeline {
     }
 }
 
+
+def apiBasePath = 'http://your-api-base-path'
+def apiEndpoints = ['/api/endpoint1', '/api/endpoint2', '/api/endpoint3', '/api/endpoint4', '/api/endpoint5', '/api/endpoint6', '/api/endpoint7', '/api/endpoint8']
+def apiCallFailed = false
+
+pipeline {
+    agent any
+
+    stages {
+        stage('API Calls') {
+            steps {
+                script {
+                    apiEndpoints.each { endpoint ->
+                        def apiUrl = "${apiBasePath}${endpoint}"
+                        echo "Making API call to: ${apiUrl}"
+                        
+                        try {
+                            // Your API call using apiUrl
+                            // If an exception occurs, it will be caught and the loop will continue
+                        } catch (Exception e) {
+                            apiCallFailed = true
+                            echo "API call failed: ${e.getMessage()}"
+                            // Log additional details if needed
+                            echo "Additional Details: ${e.getStackTrace().join('\n')}"
+                        }
+                    }
+                }
+            }
+        }
+
+        // Add other stages as needed
+
+        stage('Cleanup') {
+            steps {
+                echo 'Performing Cleanup'
+                // Optionally, add cleanup steps or finalization tasks
+            }
+        }
+    }
+
+    post {
+        always {
+            script {
+                if (apiCallFailed) {
+                    currentBuild.result = 'FAILURE'
+                    echo 'One or more API calls failed'
+                    // Send email notification indicating API call failure
+                    emailext subject: "Pipeline Failed: ${currentBuild.fullDisplayName}",
+                              body: "One or more API calls failed. Check Jenkins for details.",
+                              to: 'your-email@example.com',
+                              replyTo: 'jenkins@example.com',
+                              mimeType: 'text/plain'
+                } else {
+                    echo 'All API calls executed successfully'
+                    // Optionally, add post-success steps or notifications
+                }
+            }
+        }
+    }
+}
