@@ -146,3 +146,97 @@ pipeline {
         }
     }
 }
+
+
+Jenkins Job Schedule Documentation
+Overview
+This document provides a detailed guide on setting up and configuring a Jenkins job schedule for running API calls using a Jenkinsfile. The job is scheduled to run daily at 4 PM.
+
+Prerequisites
+Jenkins instance is set up and accessible.
+API endpoints are defined and accessible.
+Jenkins Pipeline job is created.
+Jenkins Pipeline Script
+Jenkinsfile
+groovy
+Copy code
+def apiBasePath = 'http://your-api-base-path'
+def apiEndpoints = ['/api/endpoint1', '/api/endpoint2', '/api/endpoint3', '/api/endpoint4', '/api/endpoint5', '/api/endpoint6', '/api/endpoint7', '/api/endpoint8']
+def apiCallFailed = false
+
+pipeline {
+    agent any
+
+    stages {
+        stage('API Calls') {
+            steps {
+                script {
+                    apiEndpoints.each { endpoint ->
+                        def apiUrl = "${apiBasePath}${endpoint}"
+                        echo "Making API call to: ${apiUrl}"
+                        
+                        try {
+                            // Your API call using apiUrl
+                            // If an exception occurs, it will be caught and the loop will continue
+                        } catch (Exception e) {
+                            apiCallFailed = true
+                            echo "API call failed: ${e.getMessage()}"
+                            // Log additional details if needed
+                            echo "Additional Details: ${e.getStackTrace().join('\n')}"
+                        }
+                    }
+                }
+            }
+        }
+
+        // Add other stages as needed
+
+        stage('Cleanup') {
+            steps {
+                echo 'Performing Cleanup'
+                // Optionally, add cleanup steps or finalization tasks
+            }
+        }
+    }
+
+    post {
+        always {
+            script {
+                if (apiCallFailed) {
+                    currentBuild.result = 'FAILURE'
+                    echo 'One or more API calls failed'
+                    // Send email notification indicating API call failure
+                    emailext subject: "Pipeline Failed: ${currentBuild.fullDisplayName}",
+                              body: "One or more API calls failed. Check Jenkins for details.",
+                              to: 'your-email@example.com',
+                              replyTo: 'jenkins@example.com',
+                              mimeType: 'text/plain'
+                } else {
+                    echo 'All API calls executed successfully'
+                    // Optionally, add post-success steps or notifications
+                }
+            }
+        }
+    }
+}
+Configuration Steps
+Jenkins Job Configuration:
+
+Create a new Jenkins Pipeline job.
+Configure the job with the provided Jenkinsfile.
+Set up any necessary credentials for API authentication.
+Schedule Configuration:
+
+In the job configuration, enable the "Build periodically" option.
+Set the cron expression to 0 16 * * * to schedule the job daily at 4 PM.
+API Endpoints:
+
+Define the API endpoints in the apiEndpoints list in the Jenkinsfile.
+Additional Configuration (Optional):
+
+Customize the script according to project-specific requirements.
+Adjust email notification settings as needed.
+Monitoring and Troubleshooting
+Monitor Jenkins job logs for any issues during API calls.
+Investigate individual API call failures using the provided error details.
+Adjust the script as needed for new API endpoints or changes in requirements.
