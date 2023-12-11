@@ -240,3 +240,52 @@ Monitoring and Troubleshooting
 Monitor Jenkins job logs for any issues during API calls.
 Investigate individual API call failures using the provided error details.
 Adjust the script as needed for new API endpoints or changes in requirements.
+
+
+
+pipeline {
+    agent any
+
+    environment {
+        MSAL_CLIENT_ID = 'your-msal-client-id'
+        MSAL_AUTHORITY = 'https://login.microsoftonline.com/your-tenant-id'
+        MSAL_SCOPE = 'api://your-api-app-id/.default'
+        MSAL_CLIENT_SECRET = credentials('your-credential-id')
+    }
+
+    stages {
+        stage('Authenticate') {
+            steps {
+                script {
+                    def tokenResponse = bat(script: """
+                        curl -X POST -H "Content-Type: application/x-www-form-urlencoded" \
+                        -d "client_id=${MSAL_CLIENT_ID}&scope=${MSAL_SCOPE}&client_secret=${MSAL_CLIENT_SECRET}&grant_type=client_credentials" \
+                        ${MSAL_AUTHORITY}/oauth2/v2.0/token
+                    """, returnStatus: true, returnStdout: true).trim()
+
+                    def accessToken = readJSON(text: tokenResponse).access_token
+
+                    // Set the access token as an environment variable
+                    env.MSAL_ACCESS_TOKEN = accessToken
+                }
+            }
+        }
+
+        stage('API Calls') {
+            steps {
+                script {
+                    def apiUrl = 'http://your-api-endpoint'
+                    def response = sh(script: "curl -H 'Authorization: Bearer ${env.MSAL_ACCESS_TOKEN}' ${apiUrl}", returnStatus: true).trim()
+
+                    if (response == 200) {
+                        echo 'API call succeeded'
+                    } else {
+                        error "API call failed with status code ${response}"
+                    }
+                }
+            }
+        }
+
+        // Add other stages as needed
+    }
+}
