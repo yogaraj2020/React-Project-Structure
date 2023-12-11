@@ -320,3 +320,53 @@ if [ -n "${access_token}" ]; then
 else
     echo "Failed to obtain Access Token"
 fi
+
+
+
+pipeline {
+    agent any
+
+    environment {
+        MSAL_CLIENT_ID = 'your-msal-client-id'
+        MSAL_CLIENT_SECRET = credentials('your-msal-client-secret-credential-id')
+        MSAL_AUTHORITY = 'https://login.microsoftonline.com/your-tenant-id'
+        MSAL_SCOPE = 'api://your-api-app-id/.default'
+        API_ENDPOINT = 'http://your-api-endpoint'
+    }
+
+    stages {
+        stage('MSAL Authentication') {
+            steps {
+                script {
+                    // MSAL Token Request
+                    def tokenResponse = sh(script: """
+                        curl -s -X POST -H "Content-Type: application/x-www-form-urlencoded" \
+                        -d "client_id=${MSAL_CLIENT_ID}&scope=${MSAL_SCOPE}&client_secret=${MSAL_CLIENT_SECRET}&grant_type=client_credentials" \
+                        "${MSAL_AUTHORITY}/oauth2/v2.0/token"
+                    """, returnStdout: true).trim()
+
+                    // Extract Access Token from JSON Response
+                    def accessToken = readJSON(text: tokenResponse).access_token
+
+                    // Set the access token as an environment variable
+                    env.MSAL_ACCESS_TOKEN = accessToken
+                }
+            }
+        }
+
+        stage('API Call') {
+            steps {
+                script {
+                    // Use the Access Token in API call
+                    def apiResponse = sh(script: """
+                        curl -s -H "Authorization: Bearer ${env.MSAL_ACCESS_TOKEN}" "${API_ENDPOINT}"
+                    """, returnStdout: true).trim()
+
+                    echo "API Response: ${apiResponse}"
+                }
+            }
+        }
+
+        // Add other stages as needed
+    }
+}
