@@ -289,3 +289,34 @@ pipeline {
         // Add other stages as needed
     }
 }
+
+
+#!/bin/bash
+
+# MSAL Authentication Parameters
+MSAL_CLIENT_ID="your-msal-client-id"
+MSAL_CLIENT_SECRET="your-msal-client-secret"
+MSAL_AUTHORITY="https://login.microsoftonline.com/your-tenant-id"
+MSAL_SCOPE="api://your-api-app-id/.default"
+
+# MSAL Token Request
+token_response=$(curl -s -X POST -H "Content-Type: application/x-www-form-urlencoded" \
+    -d "client_id=${MSAL_CLIENT_ID}&scope=${MSAL_SCOPE}&client_secret=${MSAL_CLIENT_SECRET}&grant_type=client_credentials" \
+    "${MSAL_AUTHORITY}/oauth2/v2.0/token")
+
+# Extract Access Token from JSON Response
+access_token=$(echo "${token_response}" | jq -r '.access_token')
+
+# Check if Access Token is obtained successfully
+if [ -n "${access_token}" ]; then
+    echo "Access Token Obtained: ${access_token}"
+
+    # Use the Access Token in API call
+    api_url="http://your-api-endpoint"
+    api_response=$(curl -s -H "Authorization: Bearer ${access_token}" "${api_url}")
+
+    # Process API Response as needed
+    echo "API Response: ${api_response}"
+else
+    echo "Failed to obtain Access Token"
+fi
