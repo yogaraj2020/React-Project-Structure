@@ -370,3 +370,145 @@ pipeline {
         // Add other stages as needed
     }
 }
+
+
+pipeline {
+    agent any
+
+    parameters {
+        string(name: 'API_ENDPOINTS', description: 'Comma-separated list of API endpoints to run', defaultValue: 'api1,api2,api3,api4,api5,api6,api7,api8')
+    }
+
+    environment {
+        MSAL_CLIENT_ID = 'your-client-id'
+        MSAL_CLIENT_SECRET = credentials('your-jenkins-secret-credential-id')
+        MSAL_AUTHORITY = 'https://login.microsoftonline.com/your-tenant-id'
+        MSAL_SCOPE = 'api://your-api-app-id/.default'
+    }
+
+    stages {
+        stage('MSAL Authentication') {
+            steps {
+                script {
+                    // MSAL Token Request using Client Credentials Grant
+                    def tokenResponse = sh(script: """
+                        curl -s -X POST -H "Content-Type: application/x-www-form-urlencoded" \
+                        -d "client_id=${MSAL_CLIENT_ID}&scope=${MSAL_SCOPE}&client_secret=${MSAL_CLIENT_SECRET}&grant_type=client_credentials" \
+                        "${MSAL_AUTHORITY}/oauth2/v2.0/token"
+                    """, returnStdout: true).trim()
+
+                    // Extract Access Token from JSON Response
+                    def accessToken = readJSON(text: tokenResponse).access_token
+
+                    // Set the access token as an environment variable
+                    env.MSAL_ACCESS_TOKEN = accessToken
+                }
+            }
+        }
+
+        stage('API Calls') {
+            steps {
+                script {
+                    def selectedEndpoints = params.API_ENDPOINTS.split(',')
+
+                    selectedEndpoints.each { apiEndpoint ->
+                        try {
+                            // Perform API Call
+                            // If it fails, the pipeline will go to the 'Failure' stage
+                            // Add logic to handle API endpoint dynamically based on failure
+                        } catch (Exception e) {
+                            // Log the error, and allow manual intervention
+                            echo "API Call to ${apiEndpoint} failed. Allowing manual intervention."
+                            input "Proceed with API Call to ${apiEndpoint}?" // Manual intervention point
+                        }
+                    }
+                }
+            }
+        }
+
+        // Add more stages as needed
+
+        stage('Failure') {
+            steps {
+                script {
+                    echo 'Pipeline failed. Check logs and decide the next steps.'
+                }
+            }
+        }
+    }
+}
+
+
+pipeline {
+    agent any
+
+    parameters {
+        string(name: 'API_ENDPOINTS', description: 'Comma-separated list of API endpoints to run', defaultValue: 'api1,api2,api3,api4,api5,api6,api7,api8')
+    }
+
+    environment {
+        MSAL_CLIENT_ID = 'your-client-id'
+        MSAL_CLIENT_SECRET = credentials('your-jenkins-secret-credential-id')
+        MSAL_AUTHORITY = 'https://login.microsoftonline.com/your-tenant-id'
+        MSAL_SCOPE = 'api://your-api-app-id/.default'
+        FAILED_APIS = [] // List to store failed API names
+    }
+
+    stages {
+        stage('MSAL Authentication') {
+            steps {
+                script {
+                    // MSAL Token Request using Client Credentials Grant
+                    def tokenResponse = sh(script: """
+                        curl -s -X POST -H "Content-Type: application/x-www-form-urlencoded" \
+                        -d "client_id=${MSAL_CLIENT_ID}&scope=${MSAL_SCOPE}&client_secret=${MSAL_CLIENT_SECRET}&grant_type=client_credentials" \
+                        "${MSAL_AUTHORITY}/oauth2/v2.0/token"
+                    """, returnStdout: true).trim()
+
+                    // Extract Access Token from JSON Response
+                    def accessToken = readJSON(text: tokenResponse).access_token
+
+                    // Set the access token as an environment variable
+                    env.MSAL_ACCESS_TOKEN = accessToken
+                }
+            }
+        }
+
+        stage('API Calls') {
+            steps {
+                script {
+                    def selectedEndpoints = params.API_ENDPOINTS.split(',')
+
+                    selectedEndpoints.each { apiEndpoint ->
+                        try {
+                            // Perform API Call
+                            // If it fails, the pipeline will go to the 'Failure' stage
+                            // Add logic to handle API endpoint dynamically based on failure
+                        } catch (Exception e) {
+                            // Log the error, and add failed API to the list
+                            echo "API Call to ${apiEndpoint} failed."
+                            FAILED_APIS.add(apiEndpoint)
+                        }
+                    }
+                }
+            }
+        }
+
+        // Add more stages as needed
+
+        stage('Failure') {
+            steps {
+                script {
+                    echo 'Pipeline failed. Check logs and decide the next steps.'
+
+                    // Include failed APIs in the email notification
+                    currentBuild.result = 'FAILURE' // Set build result to FAILURE for email
+                    emailext body: "One or more APIs failed: ${FAILED_APIS.join(', ')}",
+                             subject: "Jenkins Pipeline Failure - APIs: ${FAILED_APIS.join(', ')}",
+                             to: 'your-email@example.com'
+                }
+            }
+        }
+    }
+}
+
