@@ -1,0 +1,14 @@
+COPY cert.crt /path/in/container/cert.crt
+COPY key.key /path/in/container/key.key
+
+
+server.port=8443
+server.ssl.key-store-type=PEM
+server.ssl.key-store=classpath:cert.crt
+server.ssl.key-alias=tomcat
+
+
+docker build -t your-image-name .
+docker push your-registry/your-image-name
+
+docker run -p 8443:8443 -d your-registry/your-image-name
