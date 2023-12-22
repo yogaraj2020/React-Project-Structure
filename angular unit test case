@@ -1,0 +1,52 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TopTabComponent } from './top-tab.component';
+import { DashboardComponent } from 'path-to-your-dashboard-component';
+import { By } from '@angular/platform-browser';
+
+describe('TopTabComponent', () => {
+  let component: TopTabComponent;
+  let fixture: ComponentFixture<TopTabComponent>;
+  let dashboardComponent: DashboardComponent;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [TopTabComponent],
+      providers: [
+        // other providers
+      ],
+    }).compileComponents();
+  });
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(TopTabComponent);
+    component = fixture.componentInstance;
+    dashboardComponent = TestBed.createComponent(DashboardComponent).componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should emit selected type on tab click', () => {
+    spyOn(component.tabSelected, 'emit');
+
+    const tabs = fixture.debugElement.queryAll(By.css('.tab')); // adjust selector based on your component
+    const tabToClick = tabs[2]; // click on the third tab, for example
+    tabToClick.triggerEventHandler('click', null);
+    fixture.detectChanges();
+
+    expect(component.tabSelected.emit).toHaveBeenCalledWith(/* expected selected type */);
+  });
+
+  it('should update dashboard component on tab click', () => {
+    spyOn(dashboardComponent, 'updateData'); // assuming you have an updateData method in DashboardComponent
+
+    const tabs = fixture.debugElement.queryAll(By.css('.tab')); // adjust selector based on your component
+    const tabToClick = tabs[4]; // click on the fifth tab, for example
+    tabToClick.triggerEventHandler('click', null);
+    fixture.detectChanges();
+
+    expect(dashboardComponent.updateData).toHaveBeenCalledWith(/* expected selected type */);
+  });
+});
