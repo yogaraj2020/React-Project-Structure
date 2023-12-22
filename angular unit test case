@@ -50,3 +50,39 @@ describe('TopTabComponent', () => {
     expect(dashboardComponent.updateData).toHaveBeenCalledWith(/* expected selected type */);
   });
 });
+
+
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { YourComponent } from './your.component';  // Replace with your actual component import
+
+describe('YourComponent', () => {
+  let fixture: ComponentFixture<YourComponent>;
+  let component: YourComponent;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [YourComponent],
+    });
+
+    fixture = TestBed.createComponent(YourComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should emit selected type on tab click', () => {
+    spyOn(component.tabSelected, 'emit');
+
+    const tabsDiv = fixture.debugElement.query(By.css('.tabs'));
+    expect(tabsDiv).toBeTruthy(); // Check if the tabs container is found
+
+    const anchorTags = tabsDiv.queryAll(By.css('a'));
+
+    // Assuming you have 2 tabs for simplicity
+    anchorTags[0].nativeElement.click();
+    expect(component.tabSelected.emit).toHaveBeenCalledWith('type1');
+
+    anchorTags[1].nativeElement.click();
+    expect(component.tabSelected.emit).toHaveBeenCalledWith('type2');
+  });
+});
