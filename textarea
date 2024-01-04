@@ -1,29 +1,18 @@
-<!-- Assuming mat-cell is used to display the cell value -->
-<td mat-cell *matCellDef="let element">
-  <!-- Check if editing is allowed -->
-  <ng-container *ngIf="element.isEditing; else displayMode">
-    <!-- Display the textarea when editing is enabled -->
-    <textarea [(ngModel)]="element.text"></textarea>
-    <!-- Save and cancel icons -->
-    <button (click)="saveText(element)">Save</button>
-    <button (click)="cancelEdit(element)">Cancel</button>
+<table mat-table [dataSource]="dataSource">
+  <ng-container matColumnDef="description">
+    <td mat-cell *matCellDef="let element">
+      <div *ngIf="element.isEditing">
+        <textarea [(ngModel)]="element.description"></textarea>
+        <button mat-icon-button (click)="saveText(element)">
+          <mat-icon>save</mat-icon>
+        </button>
+        <button mat-icon-button (click)="toggleEdit(element)">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </div>
+      <div *ngIf="!element.isEditing" (click)="handleTextAreaClick(element)">
+        {{ element.description }}
+      </div>
+    </td>
   </ng-container>
-  <!-- If not editing, show the text -->
-  <ng-template #displayMode>{{ element.text }}</ng-template>
-  <!-- Edit icon, visible only if not editing -->
-  <button *ngIf="!element.isEditing" (click)="startEdit(element)">Edit</button>
-</td>
-
-startEdit(element: YourDataType): void {
-  element.isEditing = true;
-}
-
-saveText(element: YourDataType): void {
-  // Save the text to the database or perform necessary actions
-  element.isEditing = false;
-}
-
-cancelEdit(element: YourDataType): void {
-  // Cancel editing, reset changes if needed
-  element.isEditing = false;
-}
+</table>
