@@ -1,0 +1,70 @@
+import lombok.Data;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
+
+@Entity
+@Table(name = "your_entity_table")
+@Data
+public class YourEntity implements Serializable {
+
+    @EmbeddedId
+    private YourEntityId id;
+
+    @Column(name = "comment")
+    private String comment;
+
+    @Column(name = "created_date")
+    private Date createdDate;
+
+    // Constructors, getters, setters (provided by Lombok)...
+
+    @Embeddable
+    @Data
+    public static class YourEntityId implements Serializable {
+        @Column(name = "req_id")
+        private String reqId;
+
+        @Column(name = "type")
+        private String type;
+
+        // Constructors, equals, hashCode (provided by Lombok)...
+    }
+}
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
+
+public interface YourEntityRepository extends JpaRepository<YourEntity, YourEntity.YourEntityId> {
+
+    List<YourEntity> findByIdReqIdAndIdTypeOrderByCreatedDateDesc(String reqId, String type);
+}
+
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/your-entity")
+public class YourEntityController {
+
+    @Autowired
+    private YourEntityRepository yourEntityRepository;
+
+    @PostMapping("/save-comment")
+    public YourEntity saveComment(@RequestBody YourEntity yourEntity) {
+        yourEntity.setCreatedDate(new Date());
+        return yourEntityRepository.save(yourEntity);
+    }
+
+    @GetMapping("/get-historical-comments/{reqId}/{type}")
+    public List<YourEntity> getHistoricalComments(
+            @PathVariable String reqId,
+            @PathVariable String type) {
+        return yourEntityRepository.findByIdReqIdAndIdTypeOrderByCreatedDateDesc(reqId, type);
+    }
+}
