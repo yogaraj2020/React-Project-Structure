@@ -1,1 +1,10 @@
-a
+<div *ngIf="historicalComments && historicalComments.length > 0">
+  <h3>Historical Comments</h3>
+  <ul>
+    <li *ngFor="let comment of historicalComments">
+      <strong>{{ comment.createdBy }}</strong>
+      <span>{{ comment.createdDate | date: 'medium' }}</span>
+      <p>{{ comment.commentText }}</p>
+    </li>
+  </ul>
+</div>
