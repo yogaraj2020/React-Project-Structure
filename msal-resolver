@@ -1,0 +1,16 @@
+// msal-claims.resolver.ts
+import { Injectable } from '@angular/core';
+import { Resolve } from '@angular/router';
+import { Observable } from 'rxjs';
+import { YourAuthService } from './your-auth.service';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class MsalClaimsResolver implements Resolve<any> {
+  constructor(private authService: YourAuthService) {}
+
+  resolve(): Observable<any> {
+    return this.authService.getClaims(); // Implement your method to get MSAL claims
+  }
+}
