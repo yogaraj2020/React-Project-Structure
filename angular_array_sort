@@ -1,0 +1,28 @@
+interface YourObjectType {
+  comment: string;
+  date?: Date | string; // Make date property optional
+  // other properties if any
+}
+
+let yourArray: YourObjectType[] = [
+  { comment: 'Comment 1', date: new Date('2022-01-01'), /* other properties */ },
+  { comment: 'Comment 2', /* other properties */ },
+  { comment: 'Comment 3', date: '2022-03-01', /* other properties */ },
+  // ... other items
+];
+
+// Filter out objects without a valid 'date' property
+let validDateArray = yourArray.filter(item => item.date !== undefined);
+
+// Sort the array by date in descending order
+validDateArray.sort((a, b) => {
+  const dateA = typeof a.date === 'string' ? new Date(a.date) : a.date as Date;
+  const dateB = typeof b.date === 'string' ? new Date(b.date) : b.date as Date;
+
+  return dateB.getTime() - dateA.getTime();
+});
+
+// Retrieve the top 1 item (the first item after sorting)
+let topItem: YourObjectType | undefined = validDateArray[0];
+
+console.log(topItem);
