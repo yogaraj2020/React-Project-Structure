@@ -1,0 +1,38 @@
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+
+@Component({
+  selector: 'app-custom-alert',
+  templateUrl: './custom-alert.component.html',
+  styleUrls: ['./custom-alert.component.css'],
+})
+export class CustomAlertComponent {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: { message: string }) {}
+}
+
+<h1 mat-dialog-title>Custom Alert</h1>
+<div mat-dialog-content>
+  <p>{{ data.message }}</p>
+</div>
+<div mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="'close'">Close</button>
+</div>
+
+
+import { Injectable } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { CustomAlertComponent } from './custom-alert/custom-alert.component';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class CustomAlertService {
+  constructor(private dialog: MatDialog) {}
+
+  openCustomAlert(message: string): void {
+    this.dialog.open(CustomAlertComponent, {
+      width: '400px', // Adjust the width as needed
+      data: { message },
+    });
+  }
+}
