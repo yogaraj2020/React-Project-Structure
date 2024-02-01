@@ -32,7 +32,33 @@ export class CustomAlertService {
   openCustomAlert(message: string): void {
     this.dialog.open(CustomAlertComponent, {
       width: '400px', // Adjust the width as needed
-      data: { message },
-    });
-  }
+      data: { <div class="custom-alert-container">
+  <div class="title">{{ data.title }}</div>
+  <div class="message">{{ data.message }}</div>
+  <button mat-button (click)="closeDialog()">Close</button>
+</div>
+
+.custom-alert-container {
+  padding: 20px;
+  text-align: center;
 }
+
+.title {
+  font-size: 18px;
+  font-weight: bold;
+  background-color: #2196f3; /* Adjust color as needed */
+  color: #ffffff;
+  padding: 8px;
+}
+
+.message {
+  margin-top: 15px;
+  font-size: 16px;
+  color: #333333;
+}
+
+button {
+  margin-top: 20px;
+}
+
+
