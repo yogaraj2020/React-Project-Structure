@@ -88,5 +88,26 @@ describe('Util Functions', () => {
       expect(jsPDFInstance.save).toHaveBeenCalledWith(fileName);
     });
   });
+import { downloadPDF } from './util';
+
+describe('Util Functions', () => {
+  describe('downloadPDF', () => {
+    it('should attempt to create a PDF with the given HTML element and file name', () => {
+      const htmlElement = document.createElement('div');
+      const fileName = 'test.pdf';
+      
+      spyOn(document, 'createElement').and.returnValue(htmlElement);
+      spyOn(htmlElement, 'toDataURL').and.returnValue('data:image/png;base64,...');
+      spyOn(htmlElement, 'clientHeight').and.returnValue(100);
+      spyOn(htmlElement, 'clientWidth').and.returnValue(200);
+      spyOn(window, 'open');
+
+      downloadPDF(htmlElement, fileName);
+
+      expect(document.createElement).toHaveBeenCalledWith('canvas');
+      expect(htmlElement.toDataURL).toHaveBeenCalled();
+      expect(window.open).toHaveBeenCalled();
+    });
+  });
 });
 
