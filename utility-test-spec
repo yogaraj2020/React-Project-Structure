@@ -372,5 +372,41 @@ describe('Util Functions', () => {
       expect(jsPDFInstance.save).toHaveBeenCalledWith('graph.pdf');
     });
   });
+import { downloadPDF } from './util';
+import * as html2canvas from 'html2canvas';
+import * as jsPDF from 'jspdf';
+
+describe('Util Functions', () => {
+  describe('downloadPDF', () => {
+    it('should attempt to create a PDF with the given HTML element and file name', async () => {
+      // Mock HTML element
+      const chartSection = document.createElement('div');
+
+      // Mock canvas element
+      const canvasMock = document.createElement('canvas');
+      spyOn(document, 'createElement').and.returnValue(canvasMock);
+
+      // Mock html2canvas to return a canvas
+      spyOn(html2canvas, 'html2canvas').and.callFake((element: HTMLElement) => {
+        // Simulate html2canvas by immediately resolving with a canvas
+        return Promise.resolve(canvasMock);
+      });
+
+      // Spy on jsPDF's constructor to mock its behavior
+      const jsPDFInstance = jasmine.createSpyObj('jsPDFInstance', ['addImage', 'save']);
+      spyOn(jsPDF, 'jsPDF').and.returnValue(jsPDFInstance);
+
+      // Call the function
+      await downloadPDF(chartSection, 'graph.pdf');
+
+      // Expectations
+      expect(document.createElement).toHaveBeenCalledWith('canvas');
+      expect(html2canvas.html2canvas).toHaveBeenCalledWith(chartSection);
+      expect(jsPDFInstance.addImage).toHaveBeenCalledWith(
+        canvasMock.toDataURL('image/png'), 'PNG', 0, 0, jasmine.any(Number), jasmine.any(Number)
+      );
+      expect(jsPDFInstance.save).toHaveBeenCalledWith('graph.pdf');
+    });
+  });
 });
 
