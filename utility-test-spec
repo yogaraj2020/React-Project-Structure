@@ -67,5 +67,26 @@ describe('Util Functions', () => {
       expect(jsPDF.default().save).toHaveBeenCalledWith(fileName);
     });
   });
+import { downloadPDF } from './util';
+import * as jsPDF from 'jspdf';
+
+describe('Util Functions', () => {
+  describe('downloadPDF', () => {
+    it('should trigger the download of a PDF file', () => {
+      // Mock HTML element and file name
+      const htmlElement = document.createElement('div');
+      const fileName = 'test.pdf';
+
+      // Spy on jsPDF's constructor to mock its behavior
+      const jsPDFInstance = jasmine.createSpyObj('jsPDFInstance', ['addImage', 'save']);
+      spyOn(jsPDF, 'default').and.returnValue(jsPDFInstance);
+
+      // Call downloadPDF function with mocked parameters
+      downloadPDF(htmlElement, fileName);
+
+      // Expect jsPDF's save method to be called with the correct file name
+      expect(jsPDFInstance.save).toHaveBeenCalledWith(fileName);
+    });
+  });
 });
 
