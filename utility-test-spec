@@ -1,0 +1,35 @@
+// import statements for the functions to test
+import { addDate, dateDiff, downloadPDF } from './util';
+
+describe('Util Functions', () => {
+  describe('addDate', () => {
+    it('should add the given number of days to the input date', () => {
+      const inputDate = new Date('2023-12-21');
+      const daysToAdd = 5;
+      const result = addDate(inputDate, daysToAdd);
+      const expectedDate = new Date('2023-12-26');
+      expect(result).toEqual(expectedDate);
+    });
+  });
+
+  describe('dateDiff', () => {
+    it('should return the difference in days between two dates', () => {
+      const date1 = new Date('2023-12-21');
+      const date2 = new Date('2023-12-25');
+      const result = dateDiff(date1, date2);
+      const expectedDiff = 4;
+      expect(result).toEqual(expectedDiff);
+    });
+  });
+
+  describe('downloadPDF', () => {
+    it('should trigger the download of a PDF file', () => {
+      // Replace with appropriate test setup for downloadPDF function
+      // For example, mocking window.location.href assignment
+      spyOnProperty(window.navigator, 'userAgent').and.returnValue('Mock');
+      spyOn(window, 'open');
+      downloadPDF();
+      expect(window.open).toHaveBeenCalled();
+    });
+  });
+});
