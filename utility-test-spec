@@ -476,3 +476,41 @@ describe('DataService', () => {
   });
 });
 
+import { TestBed } from '@angular/core/testing';
+import { ExportToExcelService } from './exportToExcel.service';
+import { FileSaverService } from 'ngx-filesaver';
+import * as ExcelJS from 'exceljs';
+
+describe('ExportToExcelService', () => {
+  let service: ExportToExcelService;
+  let fileSaverServiceSpy: jasmine.SpyObj<FileSaverService>;
+
+  beforeEach(() => {
+    const spy = jasmine.createSpyObj('FileSaverService', ['save']);
+
+    TestBed.configureTestingModule({
+      providers: [
+        ExportToExcelService,
+        { provide: FileSaverService, useValue: spy }
+      ]
+    });
+
+    service = TestBed.inject(ExportToExcelService);
+    fileSaverServiceSpy = TestBed.inject(FileSaverService) as jasmine.SpyObj<FileSaverService>;
+  });
+
+  it('should export data to Excel file', () => {
+    // Arrange
+    const data = [
+      { name: 'John', age: 30 },
+      { name: 'Jane', age: 25 }
+    ];
+    const expectedFileName = 'test.xlsx';
+
+    // Act
+    service.exportToExcel(data);
+
+    // Assert
+    expect(fileSaverServiceSpy.save).toHaveBeenCalledOnceWith(jasmine.any(Blob), expectedFileName);
+  });
+});
