@@ -109,5 +109,28 @@ describe('Util Functions', () => {
       expect(window.open).toHaveBeenCalled();
     });
   });
+import { downloadPDF } from './util';
+import * as html2canvas from 'html2canvas';
+
+describe('Util Functions', () => {
+  describe('downloadPDF', () => {
+    it('should attempt to create a PDF with the given HTML element and file name', () => {
+      const htmlElement = document.createElement('div');
+      const fileName = 'test.pdf';
+      const canvasMock = document.createElement('canvas');
+      
+      spyOn(document, 'createElement').and.returnValue(canvasMock);
+      spyOn(canvasMock, 'getContext').and.returnValue({} as CanvasRenderingContext2D); // Mock getContext
+      spyOn(html2canvas, 'default').and.returnValue(Promise.resolve(canvasMock)); // Mock html2canvas
+
+      spyOn(window, 'open');
+
+      downloadPDF(htmlElement, fileName);
+
+      expect(document.createElement).toHaveBeenCalledWith('canvas');
+      expect(html2canvas.default).toHaveBeenCalledWith(htmlElement, { scale: 2 }); // Ensure html2canvas is called with the correct arguments
+      expect(window.open).toHaveBeenCalled();
+    });
+  });
 });
 
