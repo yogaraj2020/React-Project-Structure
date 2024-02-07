@@ -22,14 +22,24 @@ describe('Util Functions', () => {
     });
   });
 
+  import { downloadPDF } from './util';
+
+describe('Util Functions', () => {
   describe('downloadPDF', () => {
     it('should trigger the download of a PDF file', () => {
-      // Replace with appropriate test setup for downloadPDF function
-      // For example, mocking window.location.href assignment
-      spyOnProperty(window.navigator, 'userAgent').and.returnValue('Mock');
+      // Mocking HTML element and file name
+      const htmlElement = document.createElement('div');
+      const fileName = 'test.pdf';
+
+      // Spy on window.open to check if it's called with correct parameters
       spyOn(window, 'open');
-      downloadPDF();
-      expect(window.open).toHaveBeenCalled();
+
+      // Call downloadPDF function with mocked parameters
+      downloadPDF(htmlElement, fileName);
+
+      // Expect window.open to be called with correct parameters
+      expect(window.open).toHaveBeenCalledWith('data:application/pdf;base64,', fileName);
     });
   });
+});
 });
