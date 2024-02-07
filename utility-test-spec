@@ -191,4 +191,77 @@ describe('Util Functions', () => {
     });
   });
 });
+import { downloadPDF } from './util';
+import * as html2canvas from 'html2canvas';
+import * as jsPDF from 'jspdf';
+
+describe('Util Functions', () => {
+  describe('downloadPDF', () => {
+    it('should attempt to create a PDF with the given HTML element and file name', fakeAsync(() => {
+      const chartSection = document.createElement('div');
+      chartSection.id = 'chartSection'; // assuming 'chartSection' is the id of the HTML element to be converted to PDF
+      const fileName = 'graph.pdf';
+      const canvasMock = document.createElement('canvas');
+      const imgData = 'data:image/png;base64,...'; // Mocked image data
+
+      spyOn(document, 'createElement').and.returnValue(canvasMock);
+      spyOn(canvasMock, 'getContext').and.returnValue({} as CanvasRenderingContext2D); // Mock getContext
+
+      spyOn<any>(html2canvas, 'default').and.returnValue(Promise.resolve(canvasMock));
+      spyOn(jsPDF, 'default').and.callFake(() => {
+        return {
+          addImage: jasmine.createSpy('addImage'),
+          save: jasmine.createSpy('save')
+        };
+      });
+
+      let promiseResolved = false;
+      downloadPDF(chartSection, fileName).then(() => {
+        promiseResolved = true;
+      });
+
+      flushMicrotasks();
+
+      expect(document.createElement).toHaveBeenCalledWith('canvas');
+      expect(html2canvas.default).toHaveBeenCalledWith(chartSection);
+      expect(jsPDF.default).toHaveBeenCalled();
+
+      expect(jsPDF.default().addImage).toHaveBeenCalledWith(imgData, 'PNG', 0, 0, jasmine.any(Number), jasmine.any(Number));
+      expect(jsPDF.default().save).toHaveBeenCalledWith(fileName);
+
+      // Ensure the promise is resolved
+      expect(promiseResolved).toBeTrue();
+    }));
+  });
+});
+import { downloadPDF } from './util';
+import * as html2canvas from 'html2canvas';
+import * as jsPDF from 'jspdf';
+
+describe('Util Functions', () => {
+  describe('downloadPDF', () => {
+    it('should generate and save a PDF with the given HTML element', async () => {
+      // Mock HTML element
+      const htmlElement = document.createElement('div');
+      const chartSection = document.createElement('div');
+      htmlElement.appendChild(chartSection);
+
+      // Spy on html2canvas to mock its behavior
+      spyOn(html2canvas, 'default').and.returnValue(Promise.resolve(document.createElement('canvas')));
+
+      // Spy on jsPDF's constructor to mock its behavior
+      const jsPDFInstance = jasmine.createSpyObj('jsPDFInstance', ['getImageProperties', 'addImage', 'save']);
+      spyOn<any>(jsPDF, 'default').and.returnValue(jsPDFInstance);
+
+      // Call the downloadPDF function
+      await downloadPDF(chartSection, 'graph.pdf');
+
+      // Verify interactions
+      expect(html2canvas.default).toHaveBeenCalledWith(chartSection);
+      expect(jsPDF.default).toHaveBeenCalled();
+      expect(jsPDFInstance.addImage).toHaveBeenCalled();
+      expect(jsPDFInstance.save).toHaveBeenCalledWith('graph.pdf');
+    });
+  });
+});
 
