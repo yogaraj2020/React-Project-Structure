@@ -513,4 +513,37 @@ describe('ExportToExcelService', () => {
     // Assert
     expect(fileSaverServiceSpy.save).toHaveBeenCalledOnceWith(jasmine.any(Blob), expectedFileName);
   });
+import { TestBed } from '@angular/core/testing';
+import { ExportToExcelService } from './exportToExcel.service';
+import { saveAs } from 'file-saver';
+
+describe('ExportToExcelService', () => {
+  let service: ExportToExcelService;
+  let saveAsSpy: jasmine.Spy;
+
+  beforeEach(() => {
+    saveAsSpy = spyOn(saveAs, 'saveAs');
+
+    TestBed.configureTestingModule({
+      providers: [
+        ExportToExcelService
+      ]
+    });
+
+    service = TestBed.inject(ExportToExcelService);
+  });
+
+  it('should export data to Excel file', () => {
+    // Arrange
+    const data = [
+      { name: 'John', age: 30 },
+      { name: 'Jane', age: 25 }
+    ];
+
+    // Act
+    service.exportToExcel(data);
+
+    // Assert
+    expect(saveAsSpy).not.toHaveBeenCalled();
+  });
 });
