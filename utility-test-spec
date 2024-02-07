@@ -610,4 +610,52 @@ describe('DataService', () => {
     // Assert
     expect(behaviorSubjectSpy.next).toHaveBeenCalledWith(testData);
   });
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ColumnSelectorComponent } from './column-selector.component';
+import { MatDialogRef } from '@angular/material/dialog';
+import { By } from '@angular/platform-browser';
+
+describe('ColumnSelectorComponent', () => {
+  let component: ColumnSelectorComponent;
+  let fixture: ComponentFixture<ColumnSelectorComponent>;
+  let dialogRefSpy: jasmine.SpyObj<MatDialogRef<ColumnSelectorComponent>>;
+
+  beforeEach(async () => {
+    const matDialogRefSpy = jasmine.createSpyObj('MatDialogRef', ['close']);
+    
+    await TestBed.configureTestingModule({
+      declarations: [ ColumnSelectorComponent ],
+      providers: [
+        { provide: MatDialogRef, useValue: matDialogRefSpy }
+      ]
+    })
+    .compileComponents();
+  });
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(ColumnSelectorComponent);
+    component = fixture.componentInstance;
+    dialogRefSpy = TestBed.inject(MatDialogRef) as jasmine.SpyObj<MatDialogRef<ColumnSelectorComponent>>;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should emit change event on toggleColumn', () => {
+    spyOn(component.change, 'emit');
+    component.toggleColumn('column1');
+    expect(component.change.emit).toHaveBeenCalledWith(['column1']);
+  });
+
+  it('should close dialog on closeDialog', () => {
+    component.closeDialog();
+    expect(dialogRefSpy.close).toHaveBeenCalled();
+  });
+
+  it('should have a button to close dialog', () => {
+    const closeButton = fixture.debugElement.query(By.css('.close-button'));
+    expect(closeButton).toBeTruthy();
+  });
 });
