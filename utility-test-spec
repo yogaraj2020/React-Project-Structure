@@ -408,5 +408,43 @@ describe('Util Functions', () => {
       expect(jsPDFInstance.save).toHaveBeenCalledWith('graph.pdf');
     });
   });
+import { TestBed } from '@angular/core/testing';
+import { CustomAlertService } from 'path-to-custom-alert-service';
+import { MatDialog } from '@angular/material/dialog';
+import { of } from 'rxjs';
+
+describe('CustomAlertService', () => {
+  let service: CustomAlertService;
+  let dialogSpy: jasmine.SpyObj<MatDialog>;
+
+  beforeEach(() => {
+    const dialogSpyObj = jasmine.createSpyObj('MatDialog', ['open']);
+
+    TestBed.configureTestingModule({
+      providers: [
+        CustomAlertService,
+        { provide: MatDialog, useValue: dialogSpyObj }
+      ]
+    });
+
+    service = TestBed.inject(CustomAlertService);
+    dialogSpy = TestBed.inject(MatDialog) as jasmine.SpyObj<MatDialog>;
+  });
+
+  it('should open dialog with correct parameters', () => {
+    const title = 'Test Title';
+    const message = 'Test Message';
+    const dialogRefMock = { afterClosed: () => of(null) };
+
+    dialogSpy.open.and.returnValue(dialogRefMock);
+
+    service.openCustomAlert(title, message);
+
+    expect(dialogSpy.open).toHaveBeenCalledWith(CustomAlertComponent, {
+      width: '400px',
+      data: { title, message },
+      disableClose: true
+    });
+  });
 });
 
