@@ -579,4 +579,35 @@ describe('ExportToExcelService', () => {
     // Assert
     expect(saveAsSpy).toHaveBeenCalled();
   });
+import { TestBed } from '@angular/core/testing';
+import { DataService } from './data.service';
+import { BehaviorSubject } from 'rxjs';
+
+describe('DataService', () => {
+  let service: DataService;
+  let behaviorSubjectSpy: jasmine.SpyObj<BehaviorSubject<any>>;
+
+  beforeEach(() => {
+    const behaviorSubjectSpyObj = jasmine.createSpyObj('BehaviorSubject', ['next']);
+
+    TestBed.configureTestingModule({
+      providers: [
+        DataService,
+        { provide: BehaviorSubject, useValue: behaviorSubjectSpyObj }
+      ]
+    });
+    service = TestBed.inject(DataService);
+    behaviorSubjectSpy = TestBed.inject(BehaviorSubject) as jasmine.SpyObj<BehaviorSubject<any>>;
+  });
+
+  it('should emit data when changeData.next is called', () => {
+    // Arrange
+    const testData = { foo: 'bar' };
+
+    // Act
+    service.changeData.next(testData);
+
+    // Assert
+    expect(behaviorSubjectSpy.next).toHaveBeenCalledWith(testData);
+  });
 });
