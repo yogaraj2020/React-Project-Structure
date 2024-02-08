@@ -39,3 +39,62 @@ describe('MyDataTableComponent', () => {
     expect(component.dataSource.paginator.pageSizeOptions).toEqual([10, 25, 50]);
   });
 });
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatTableModule } from '@angular/material/table';
+import { MyDataTableComponent } from './my-data-table.component';
+
+describe('MyDataTableComponent', () => {
+  let component: MyDataTableComponent;
+  let fixture: ComponentFixture<MyDataTableComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [MyDataTableComponent],
+      imports: [MatTableModule]
+    })
+    .compileComponents();
+  });
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(MyDataTableComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should setup filter for text input', () => {
+    const filterValue = 'John';
+    const filterPredicate = component.setupFilter('name');
+    expect(filterPredicate({ name: 'John' }, filterValue)).toBe(true);
+    expect(filterPredicate({ name: 'Jane' }, filterValue)).toBe(false);
+  });
+
+  it('should setup filter for date range', () => {
+    const fromDate = new Date('2022-01-01');
+    const toDate = new Date('2022-12-31');
+    const filterPredicate = component.setupFilter('date');
+    expect(filterPredicate({ date: new Date('2022-06-15') }, fromDate, toDate)).toBe(true);
+    expect(filterPredicate({ date: new Date('2023-01-01') }, fromDate, toDate)).toBe(false);
+  });
+
+  it('should apply text filter', () => {
+    component.dataSource = [
+      { id: 1, name: 'John' },
+      { id: 2, name: 'Jane' },
+    ];
+    component.applyFilter('John');
+    expect(component.dataSource.filteredData.length).toBe(1);
+    expect(component.dataSource.filteredData[0].name).toBe('John');
+  });
+
+  it('should apply date range filter', () => {
+    const fromDate = new Date('2022-01-01');
+    const toDate = new Date('2022-12-31');
+    component.dataSource = [
+      { id: 1, date: new Date('2022-06-15') },
+      { id: 2, date: new Date('2023-01-01') },
+    ];
+    component.applyFilter('', fromDate, toDate);
+    expect(component.dataSource.filteredData.length).toBe(1);
+    expect(component.dataSource.filteredData[0].date).toEqual(new Date('2022-06-15'));
+  });
+});
