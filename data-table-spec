@@ -156,3 +156,60 @@ describe('YourComponent', () => {
     // Add assertions for the filtered data
   });
 });
+import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { MatTableModule } from '@angular/material/table';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
+import { MatTableDataSource } from '@angular/material/table';
+import { MyComponent } from './my.component';
+
+describe('MyComponent', () => {
+  let component: MyComponent;
+  let fixture: ComponentFixture<MyComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [MyComponent],
+      imports: [MatTableModule, MatInputModule, FormsModule],
+    }).compileComponents();
+  });
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(MyComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should set up text filter correctly', () => {
+    const dataSource = new MatTableDataSource([
+      { name: 'John', age: 30 },
+      { name: 'Jane', age: 25 },
+    ]);
+    component.dataSource = dataSource;
+
+    const filterValue = 'John';
+    component.setupFilter('name');
+    dataSource.filter = filterValue.trim().toLowerCase();
+    
+    expect(dataSource.filteredData.length).toBe(1);
+    expect(dataSource.filteredData[0].name).toBe('John');
+  });
+
+  it('should set up date range filter correctly', () => {
+    const dataSource = new MatTableDataSource([
+      { name: 'John', age: 30, dob: new Date('1990-01-01') },
+      { name: 'Jane', age: 25, dob: new Date('1995-01-01') },
+    ]);
+    component.dataSource = dataSource;
+
+    const filterValue = {
+      from: new Date('1990-01-01'),
+      to: new Date('1994-12-31'),
+    };
+    component.setupFilter('dob');
+    component.applyFilter(filterValue);
+    
+    expect(dataSource.filteredData.length).toBe(1);
+    expect(dataSource.filteredData[0].name).toBe('John');
+  });
+});
