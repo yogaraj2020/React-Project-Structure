@@ -864,4 +864,64 @@ describe('AuthGuard', () => {
       expect(navigateSpy).toHaveBeenCalledWith(['/login']);
     });
   });
+import { DateFormatPipe } from './dateFormat.pipe';
+
+describe('DateFormatPipe', () => {
+  let pipe: DateFormatPipe;
+
+  beforeEach(() => {
+    pipe = new DateFormatPipe();
+  });
+
+  it('create an instance', () => {
+    expect(pipe).toBeTruthy();
+  });
+
+  it('transforms a date string to a formatted date', () => {
+    const inputDate = '2022-02-28T12:00:00Z';
+    const expectedDate = 'Feb 28, 2022';
+    
+    const datePipeSpy = jasmine.createSpyObj('DatePipe', ['transform']);
+    datePipeSpy.transform.and.returnValue(expectedDate);
+
+    spyOn(globalThis, 'DatePipe').and.returnValue(datePipeSpy);
+
+    const result = pipe.transform(inputDate);
+
+    expect(result).toEqual(expectedDate);
+    expect(globalThis.DatePipe).toHaveBeenCalledWith('en-US');
+    expect(datePipeSpy.transform).toHaveBeenCalledWith(inputDate, 'mediumDate');
+  });
+
+  it('transforms a date string to a custom formatted date', () => {
+    const inputDate = '2022-02-28T12:00:00Z';
+    const expectedDate = '02/28/2022';
+
+    const datePipeSpy = jasmine.createSpyObj('DatePipe', ['transform']);
+    datePipeSpy.transform.and.returnValue(expectedDate);
+
+    spyOn(globalThis, 'DatePipe').and.returnValue(datePipeSpy);
+
+    const result = pipe.transform(inputDate, 'shortDate');
+
+    expect(result).toEqual(expectedDate);
+    expect(globalThis.DatePipe).toHaveBeenCalledWith('en-US');
+    expect(datePipeSpy.transform).toHaveBeenCalledWith(inputDate, 'shortDate');
+  });
+
+  it('returns null if input value is null', () => {
+    const inputDate = null;
+
+    const result = pipe.transform(inputDate);
+
+    expect(result).toBeNull();
+  });
+
+  it('returns null if input value is undefined', () => {
+    const inputDate = undefined;
+
+    const result = pipe.transform(inputDate);
+
+    expect(result).toBeNull();
+  });
 });
