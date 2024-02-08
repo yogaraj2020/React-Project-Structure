@@ -98,3 +98,61 @@ describe('MyDataTableComponent', () => {
     expect(component.dataSource.filteredData[0].date).toEqual(new Date('2022-06-15'));
   });
 });
+import { TestBed } from '@angular/core/testing';
+import { MatTableDataSource } from '@angular/material/table';
+import { YourComponent } from './your.component'; // Import your component where the filter functions are defined
+
+describe('YourComponent', () => {
+  let component: YourComponent;
+  let dataSource: MatTableDataSource<any>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [YourComponent]
+    }).compileComponents();
+  });
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(YourComponent);
+    component = fixture.componentInstance;
+    dataSource = new MatTableDataSource<any>();
+    component.dataSource = dataSource;
+    fixture.detectChanges();
+  });
+
+  it('should set up text filter predicate correctly', () => {
+    component.setupFilter('name'); // Setup filter for the 'name' column
+    dataSource.filter = 'John'; // Apply filter
+
+    expect(dataSource.filteredData.length).toEqual(1);
+    expect(dataSource.filteredData[0].name).toEqual('John');
+  });
+
+  it('should set up date range filter predicate correctly', () => {
+    component.setupFilter('date'); // Setup filter for the 'date' column
+    const startDate = new Date('2024-02-02');
+    const endDate = new Date('2024-02-08');
+    dataSource.filter = { startDate, endDate }; // Apply date range filter
+
+    expect(dataSource.filteredData.length).toEqual(2);
+    // Add assertions for the filtered data
+  });
+
+  it('should apply text filter correctly', () => {
+    component.setupFilter('name'); // Setup filter for the 'name' column
+    component.applyFilter('John'); // Apply filter for 'John'
+
+    expect(dataSource.filteredData.length).toEqual(1);
+    expect(dataSource.filteredData[0].name).toEqual('John');
+  });
+
+  it('should apply date range filter correctly', () => {
+    component.setupFilter('date'); // Setup filter for the 'date' column
+    const startDate = new Date('2024-02-02');
+    const endDate = new Date('2024-02-08');
+    component.applyDateRangeFilter(startDate, endDate); // Apply date range filter
+
+    expect(dataSource.filteredData.length).toEqual(2);
+    // Add assertions for the filtered data
+  });
+});
