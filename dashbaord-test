@@ -1,0 +1,10 @@
+it('should filter data when a tab is clicked', () => {
+  const selectedTab = 'YourSelectedTab';
+  component.onTabClick(selectedTab);
+
+  // Apply filtering logic to sample data
+  const expectedFilteredData = sampleData.filter(item => item.tab === selectedTab);
+
+  // Assert that the data source has been filtered correctly
+  expect(component.dataSource.filteredData).toEqual(expectedFilteredData);
+});
