@@ -1,0 +1,18 @@
+enum MyEnum {
+  Value1 = "First",
+  Value2 = "Second",
+  Value3 = "Third"
+}
+
+function getIndexByValue(value: string): number {
+  const enumValues = Object.values(MyEnum);
+  for (let i = 0; i < enumValues.length; i++) {
+    if (enumValues[i] === value) {
+      return i;
+    }
+  }
+  return -1; // If value is not found in the enum
+}
+
+const index = getIndexByValue("Second");
+console.log("Index:", index); // Output: Index: 1
