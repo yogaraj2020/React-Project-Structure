@@ -1,0 +1,23 @@
+// settings.model.ts
+export interface Settings {
+  [key: string]: any;
+}
+
+// module-configurations.ts
+import { Settings } from './settings.model';
+
+export const GENERIC_MODULE_CONFIGURATIONS: { [moduleName: string]: Settings } = {
+  dashboard: { 
+    dataFilters: [],
+    columnSelection: [],
+    tableSorting: [],
+    pagination: { currentPage: 1, pageSize: 10 },
+    columnFilters: []
+  },
+  otherModule: {
+    setting1: '',
+    setting2: 0,
+    setting3: false
+  },
+  // Add configurations for other modules here
+};
