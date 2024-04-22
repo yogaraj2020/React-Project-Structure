@@ -1,0 +1,20 @@
+// modal-toast.service.ts
+import { Injectable } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ToastrService, IndividualConfig } from 'ngx-toastr';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ModalToastService {
+
+  constructor(private dialog: MatDialog, private toastr: ToastrService) { }
+
+  showToast(message: string) {
+    const toastConfig: Partial<IndividualConfig> = {
+      timeOut: 3000, // Set the duration in milliseconds
+      positionClass: 'toast-center'
+    };
+    this.toastr.success(message, 'Success', toastConfig);
+  }
+}
