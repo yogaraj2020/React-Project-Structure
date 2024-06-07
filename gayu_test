@@ -1,0 +1,57 @@
+public class DirectoryWatcherService 
+{
+private final DirectoryServiceConfig properties;
+private final HESIPublisherMessageHandler  hesiPublisherMessageHandler;
+
+public void watch(){
+watchService watchService;
+try{
+watchService =FileSystems.getDefault().newWatcherService();
+path path =paths.get(properties.getRemoteDir());
+
+path.register(watchService,StandardWatchEventKinds.Entry_CREATE);
+Watcher Key;
+while ((key =watcherService.take())!=null){
+  for(watcherEvent<?>event :key.pollEvents()){
+
+WatchEvent<Path> ev = (WatchEvent<Path>) event;
+String filename =ev.context().toString();
+if(isTriggerFile(filename))){
+File datafile =paths.get(properties.getRemoteDir()+filename.substring(0,filename.lastIndexOf('.'))).toFile();
+if(datafile.exists()){
+string contentString =Files.readString(Paths.get(properties.getRemoteDir()+filename.substring(0,filename.lastIndexOf('.'))));
+hesiPublisherMessageHandler.hanleMessage(filename.substring(0,filename.lastIndexOf('.')),contentString);
+}else{
+log.info("nodata",filename);
+}
+File.deelte(paths.get(properties.getRemoteDir()+ev.context()));
+log.info("trigger");
+}
+
+}
+key.reset();
+
+
+}
+
+
+
+}
+catch(IoException\InterruptedException e){
+log.error("exception");
+throw new DirectoryWatcherException(
+"exception occurred while hesi wtach",e);
+)
+
+
+}
+
+
+
+}
+
+
+
+
+
+}
