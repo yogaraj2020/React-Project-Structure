@@ -1,0 +1,29 @@
+ManagedSystems: Array<any> = [];
+selectedManagedSystem: any;
+filterTimeout: any;
+
+onDropdownFilter(event: any) {
+  const searchText = event.filter;
+
+  // Call API only after 3 characters
+  if (searchText && searchText.length >= 3) {
+    // Optional debounce to avoid multiple rapid calls
+    if (this.filterTimeout) {
+      clearTimeout(this.filterTimeout);
+    }
+
+    this.filterTimeout = setTimeout(() => {
+      this.loadManagedSystemsDropdown(searchText);
+    }, 300); // 300ms debounce
+  }
+}
+
+loadManagedSystemsDropdown(searchText: string) {
+  this.apexService
+    .EventSearch_ARA_EventSearch_Get_ManagedSystems(searchText)
+    .then((response: Array<any>) => {
+      this.ManagedSystems = response.map(item => ({
+        managedsystem: item
+      }));
+    });
+}
