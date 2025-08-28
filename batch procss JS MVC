@@ -1,0 +1,72 @@
+// Helper: process in batches (e.g., 50 at a time)
+async function processInBatches(items, batchSize, processFunc) {
+    for (let i = 0; i < items.length; i += batchSize) {
+        let batch = items.slice(i, i + batchSize);
+        // Run this batch in parallel
+        await Promise.all(batch.map(item => processFunc(item)));
+    }
+}
+
+$("#btnODR").click(async function () {
+    hasProgressbar = false;
+
+    let table = $("#selectedMeters").DataTable();
+    let selectedData = [];
+
+    // Collect all rows
+    table.rows().every(function () {
+        let rowData = this.data();
+        let rowNode = $(this.node());
+        selectedData.push({
+            meterId: rowData.MeterNumber,
+            orgId: rowData.MDMsOrganizationID,
+            nominal: rowData.NominalVoltageRange,
+            mesProfile: rowData.VoltageMeasurementProfile,
+            rowNode: rowNode,
+            control: this
+        });
+    });
+
+    // Process in batches of 50 requests at a time
+    await processInBatches(selectedData, 50, (item) => {
+        return getODRStatus(
+            item.meterId,
+            item.orgId,
+            item.nominal,
+            item.mesProfile,
+            item.rowNode,
+            item.control
+        );
+    });
+
+    console.log("All rows processed.");
+});
+
+function getODRStatus(meterId, orgID, nominal, mesProfile, rowNode, control) {
+    $(control).prop("disabled", true);
+
+    var node = rowNode.children('td')[1]; // adjust index to match your grid
+    node.innerHTML = getSpinning(false);
+
+    return $.ajax({
+        url: $("#btnODR").data("request-url"),
+        type: "POST",
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify({
+            meterId: meterId,
+            orgId: orgID,
+            measurementProfile: mesProfile,
+            nominalVoltage: nominal
+        }),
+        async: true,
+        cache: false,
+        success: function (d) {
+            loadRowDataForPingAndODR(d, rowNode, null);
+
+            // Example UI updates (your existing ones kept)
+            setODRStatus($(node), d);
+            if ($(node)[0]) node.innerHTML = node.innerHTML.replace("disabled=\"\"", "");
+            $(control).prop("disabled", false);
+        }
+    });
+}
