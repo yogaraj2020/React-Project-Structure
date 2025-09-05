@@ -1,0 +1,81 @@
+$("#btnODR").click(function () {
+    var allRows = [];
+    $("#selectedMeters").DataTable().rows().every(function (rowIdx, tableLoop, rowLoop) {
+        var rowData = this.data();
+        var rowNode = this.node();
+
+        allRows.push({
+            meterId: rowData.MeterNumber,
+            orgID: rowData.MDSOrganizationID,
+            measurementProfile: rowData.VoltageMeasurementProfile,
+            nominalVoltage: rowData.NominalVoltageRange,
+            rowId: $(rowNode).attr("id") // assuming each <tr> has an id
+        });
+    });
+
+    // process in batches of 200
+    processInBatches(allRows, 200);
+});
+
+function processInBatches(rows, batchSize) {
+    let i = 0;
+
+    function sendNextBatch() {
+        if (i >= rows.length) return;
+
+        let batch = rows.slice(i, i + batchSize);
+
+        $.ajax({
+            url: '/YourController/GetMeterReadStatuses', // new batch endpoint
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(batch),
+            success: function (results) {
+                results.forEach(function (res) {
+                    // find respective row and update UI
+                    $("#row-" + res.rowId + " .colResult").text(res.status);
+                });
+
+                // move to next batch
+                i += batchSize;
+                sendNextBatch();
+            },
+            error: function () {
+                console.error("Batch failed at index " + i);
+            }
+        });
+    }
+
+    public class MeterRequest {
+    public string MeterId { get; set; }
+    public string OrgID { get; set; }
+    public string MeasurementProfile { get; set; }
+    public string NominalVoltage { get; set; }
+    public string RowId { get; set; } // to map back to UI row
+}
+
+public class MeterResponse {
+    public string RowId { get; set; }
+    public string Status { get; set; }
+}
+
+[HttpPost]
+public JsonResult GetMeterReadStatuses(List<MeterRequest> requests)
+{
+    var results = new List<MeterResponse>();
+
+    foreach (var req in requests)
+    {
+        // Call your backend APIs in sequence (like before)
+        var status = BackendApiService.GetMeterReadStatus(
+            req.MeterId, req.OrgID, req.MeasurementProfile, req.NominalVoltage);
+
+        results.Add(new MeterResponse {
+            RowId = req.RowId,
+            Status = status
+        });
+    }
+
+    return Json(results);
+}
+
