@@ -100,6 +100,40 @@ public JsonResult GetMeterReadStatuses(List<MeterRequest> requests)
 
     return Json(results);
 }
+$("#btnODR").click(function () {
+    var table = $("#selectedMeters").DataTable();
+
+    var allRows = [];
+    table.rows().every(function () {
+        var rowData = this.data();
+        var rowNode = this.node();
+
+        console.log("RowData:", rowData); // ✅ debug
+        console.log("RowNode:", rowNode); // ✅ debug
+
+        if (rowData) {
+            allRows.push({
+                meterId: rowData.MeterNumber,
+                orgID: rowData.MDSOrganizationID,
+                measurementProfile: rowData.VoltageMeasurementProfile,
+                nominalVoltage: rowData.NominalVoltageRange,
+                rowNodeId: $(rowNode).attr("id") || ("row-" + rowData.MeterNumber)
+            });
+
+            // Ensure <tr> has an id
+            $(rowNode).attr("id", "row-" + rowData.MeterNumber);
+        }
+    });
+
+    console.log("AllRows collected:", allRows); // ✅ check length
+
+    if (allRows.length > 0) {
+        processInBatches(allRows, 200);
+    } else {
+        console.warn("⚠️ No rows found in DataTable");
+    }
+});
+
 
 
 
