@@ -1,19 +1,21 @@
 $("#btnODR").click(function () {
+    hasProgressbar = false;
+
+    // collect all rows first
     var allRows = [];
     $("#selectedMeters").DataTable().rows().every(function (rowIdx, tableLoop, rowLoop) {
         var rowData = this.data();
         var rowNode = this.node();
-
         allRows.push({
             meterId: rowData.MeterNumber,
             orgID: rowData.MDSOrganizationID,
             measurementProfile: rowData.VoltageMeasurementProfile,
             nominalVoltage: rowData.NominalVoltageRange,
-            rowId: $(rowNode).attr("id") // assuming each <tr> has an id
+            rowNodeId: $(rowNode).attr("id") // assuming each <tr> has id, else we assign one
         });
     });
 
-    // process in batches of 200
+    // process in batches
     processInBatches(allRows, 200);
 });
 
@@ -31,14 +33,16 @@ function processInBatches(rows, batchSize) {
             contentType: 'application/json',
             data: JSON.stringify(batch),
             success: function (results) {
+                // results = array of { rowNodeId, status, etc. }
                 results.forEach(function (res) {
-                    // find respective row and update UI
-                    $("#row-" + res.rowId + " .colResult").text(res.status);
+                    let $row = $("#" + res.rowNodeId);
+
+                    // same UI update you had before:
+                    loadRowDataForPingAndODR(res, $row[0], null);
                 });
 
-                // move to next batch
                 i += batchSize;
-                sendNextBatch();
+                sendNextBatch(); // recursive until all done
             },
             error: function () {
                 console.error("Batch failed at index " + i);
@@ -46,17 +50,34 @@ function processInBatches(rows, batchSize) {
         });
     }
 
-    public class MeterRequest {
+    sendNextBatch();
+}
+
+function loadRowDataForPingAndODR(d, rowNode, control) {
+    var odrNode = $(rowNode).children('td')[_readResultCol];
+    var pingNode = $("#selectedMeters").DataTable().row(rowNode).nodes().children('td')[_pingResultCol];
+
+    // update UI with response data
+    if (d.status) {
+        $(odrNode).html(d.status);
+    }
+    if (d.ping) {
+        $(pingNode).html(d.ping);
+    }
+}
+
+public class MeterRequest {
     public string MeterId { get; set; }
     public string OrgID { get; set; }
     public string MeasurementProfile { get; set; }
     public string NominalVoltage { get; set; }
-    public string RowId { get; set; } // to map back to UI row
+    public string RowNodeId { get; set; }
 }
 
 public class MeterResponse {
-    public string RowId { get; set; }
+    public string RowNodeId { get; set; }
     public string Status { get; set; }
+    public string Ping { get; set; }
 }
 
 [HttpPost]
@@ -66,16 +87,22 @@ public JsonResult GetMeterReadStatuses(List<MeterRequest> requests)
 
     foreach (var req in requests)
     {
-        // Call your backend APIs in sequence (like before)
+        // Your existing backend API call logic
         var status = BackendApiService.GetMeterReadStatus(
             req.MeterId, req.OrgID, req.MeasurementProfile, req.NominalVoltage);
 
         results.Add(new MeterResponse {
-            RowId = req.RowId,
-            Status = status
+            RowNodeId = req.RowNodeId,
+            Status = status,
+            Ping = "OK" // add extra fields if needed
         });
     }
 
     return Json(results);
 }
+
+
+
+
+
 
