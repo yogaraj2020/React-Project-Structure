@@ -1,0 +1,96 @@
+$("#btnODR").click(function () {
+    var table = $("#selectedMeters").DataTable();
+
+    var allRows = [];
+    table.rows().every(function () {
+        var rowData = this.data();
+        var rowNode = this.node();
+
+        if (rowData) {
+            var rowId = "row-" + rowData.MeterNumber;
+            $(rowNode).attr("id", rowId); // ensure <tr> has id
+
+            allRows.push({
+                meterId: rowData.MeterNumber,
+                orgID: rowData.MDSOrganizationID,
+                measurementProfile: rowData.VoltageMeasurementProfile,
+                nominalVoltage: rowData.NominalVoltageRange,
+                rowNodeId: rowId
+            });
+        }
+    });
+
+    console.log("Total rows collected: ", allRows.length);
+
+    if (allRows.length > 0) {
+        processInParallel(allRows, 20); // 🔹 try batch size 20 first
+    } else {
+        console.warn("⚠️ No rows found in DataTable");
+    }
+});
+
+function processInParallel(rows, batchSize) {
+    let batches = [];
+
+    // split rows into smaller groups
+    for (let i = 0; i < rows.length; i += batchSize) {
+        batches.push(rows.slice(i, i + batchSize));
+    }
+
+    console.log("Total batches: ", batches.length);
+
+    // send all batches in parallel
+    batches.forEach(batch => {
+        $.ajax({
+            url: '/YourController/GetMeterReadStatuses', // 🔹 update controller path
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(batch),
+            success: function (results) {
+                // update rows as soon as each batch responds
+                results.forEach(function (res) {
+                    let $row = $("#" + res.rowNodeId);
+                    if ($row.length) {
+                        loadRowDataForPingAndODR(res, $row[0], null);
+                    }
+                });
+            },
+            error: function (err) {
+                console.error("Batch failed: ", err);
+            }
+        });
+    });
+}public class MeterRequest {
+    public string MeterId { get; set; }
+    public string OrgID { get; set; }
+    public string MeasurementProfile { get; set; }
+    public string NominalVoltage { get; set; }
+    public string RowNodeId { get; set; }
+}
+
+public class MeterResponse {
+    public string RowNodeId { get; set; }
+    public string Status { get; set; }
+    public string Ping { get; set; }
+}
+
+[HttpPost]
+public JsonResult GetMeterReadStatuses(List<MeterRequest> requests)
+{
+    var results = new List<MeterResponse>();
+
+    foreach (var req in requests)
+    {
+        // your backend API logic here
+        var status = BackendApiService.GetMeterReadStatus(
+            req.MeterId, req.OrgID, req.MeasurementProfile, req.NominalVoltage);
+
+        results.Add(new MeterResponse {
+            RowNodeId = req.RowNodeId,
+            Status = status,
+            Ping = "OK" // or real ping value
+        });
+    }
+
+    return Json(results);
+}
