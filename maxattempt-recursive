@@ -1,0 +1,35 @@
+private string FetchDataWithRetry(long jobID, int maxAttempts = 3, int delayMilliseconds = 1000)
+{
+    bool isFinalCall = false;
+    MeterReadWSHandler mrws = new MeterReadWSHandler();
+
+    for (int attempt = 1; attempt <= maxAttempts; attempt++)
+    {
+        string data = mrws.GetDataByJobID(jobID.ToString());
+
+        if (!string.IsNullOrWhiteSpace(data))
+        {
+            return data;
+        }
+
+        if (attempt < maxAttempts)
+        {
+            // normal retry delay
+            System.Threading.Thread.Sleep(delayMilliseconds);
+        }
+        else if (!isFinalCall)
+        {
+            // one last special delay + retry
+            System.Threading.Thread.Sleep(11000);
+            isFinalCall = true;
+
+            data = mrws.GetDataByJobID(jobID.ToString());
+            if (!string.IsNullOrWhiteSpace(data))
+            {
+                return data;
+            }
+        }
+    }
+
+    return null;
+}
