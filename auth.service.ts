@@ -35,15 +35,56 @@ export class AuthService {
     });
   }
 
-  logout() {
-    this.msalInstance.logout();
-  }
-
   getAccount() {
     return this.msalInstance.getAccount();
   }
 
   isAuthenticated(): boolean {
     return this.getAccount() != null;
+  }
+}
+
+import { Injectable } from '@angular/core';
+import { CanActivate } from '@angular/router';
+import { AuthService } from './auth.service';
+
+@Injectable()
+export class AuthGuard implements CanActivate {
+  constructor(private authService: AuthService) {}
+
+  canActivate(): boolean {
+    if (this.authService.isAuthenticated()) {
+      return true;
+    } else {
+      this.authService.login();  // redirect to Azure AD login
+      return false;
+    }
+  }
+}
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from './auth.service';
+
+@Component({
+  selector: 'app-root',
+  template: `
+    <div *ngIf="!user">
+      <button (click)="login()">Login</button>
+    </div>
+    <div *ngIf="user">
+      <h3>Welcome, {{ user.name }}</h3>
+    </div>
+  `
+})
+export class AppComponent implements OnInit {
+  user: any;
+
+  constructor(private authService: AuthService) {}
+
+  ngOnInit() {
+    this.user = this.authService.getAccount();
+  }
+
+  login() {
+    this.authService.login();
   }
 }
