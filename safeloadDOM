@@ -1,0 +1,24 @@
+function safeLoadRowData(res) {
+    var row = table.row("#" + res.MeterNumber);
+    var node = row.node();
+
+    if (node) {
+        // row is in the DOM → update immediately
+        loadRowDataForPingAndODR(node, res, null);
+    } else {
+        // row not visible → wait for it to be drawn
+        table.on("draw", function () {
+            var retryRow = table.row("#" + res.MeterNumber);
+            if (retryRow.node()) {
+                loadRowDataForPingAndODR(retryRow.node(), res, null);
+            }
+        });
+    }
+}
+
+batchResponse.forEach(function(res) {
+    safeLoadRowData(res);
+});
+
+
+
