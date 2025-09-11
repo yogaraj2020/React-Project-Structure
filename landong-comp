@@ -28,3 +28,46 @@ const routes: Routes = [
   { path: 'profile', component: ProfileComponent, canActivate: [AuthGuard] }
 ];
 
+import { Injectable } from '@angular/core';
+import { CanActivate, ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+import { AppService } from './app.service';
+import { AuthService } from './auth.service';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/flatMap';
+
+@Injectable()
+export class RouteGuard implements CanActivate {
+  constructor(
+    private router: Router,
+    private appService: AppService,
+    private authService: AuthService
+  ) {}
+
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
+    // 🔹 Get logged-in account from MSAL
+    const account = this.authService.getAccount();
+
+    if (!account) {
+      // If no account → not signed in → go back to landing (will trigger SSO)
+      this.router.navigate(['/']);
+      return false;
+    }
+
+    const corpId = account.accountIdentifier;  // Or account.userName if your API expects email
+
+    // 🔹 Now do the same role check logic as before
+    return this.appService.getCASTSecurityObjects(corpId).map(response => {
+      const roles = route.data['roles'] as Array<string>;
+      const objArray = response.map(a => a.obj_unique_id);
+
+      if (objArray.indexOf(roles[0]) >= 0) {
+        return true;
+      }
+
+      this.router.navigate(['/app-landing-page']);
+      return false;
+    });
+  }
+}
+
