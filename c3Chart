@@ -1,0 +1,45 @@
+function loadVoltageGraph(d) {
+    var voltageReadHistory = d.voltageReadHistory;
+
+    if (!voltageReadHistory || voltageReadHistory.length === 0) {
+        document.getElementById("chart2").innerHTML =
+            "<div style='text-align:center; padding:20px; font-weight:bold;'>No Data Available for Phasewise Voltages</div>";
+        return;
+    }
+
+    _voltagechart = c3.generate({
+        data: {
+            json: voltageReadHistory,
+            keys: {
+                value: d.populatedVoltageValues,
+                x: "ReadDateTimeString"
+            },
+            type: "line",
+            empty: { label: { text: "No Data Available for Phasewise Voltages" } }
+        },
+        bindto: "#chart2",
+        axis: {
+            x: {
+                type: "timeseries",
+                tick: {
+                    format: "%m/%d/%Y %H:%M",
+                    culling: true,
+                    fit: false,
+                    rotate: 60,
+                    multiline: true
+                }
+            }
+        },
+        tooltip: {
+            format: {
+                value: function (v, ratio, id, i) {
+                    if ((id.toUpperCase() === "PHASEA" && d.voltageDataFlags[i].PhaseA === 0) ||
+                        (id.toUpperCase() === "PHASEB" && d.voltageDataFlags[i].PhaseB === 0)) {
+                        return "Missing";
+                    }
+                    return v;
+                }
+            }
+        }
+    });
+}
