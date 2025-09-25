@@ -1,0 +1,113 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "projects": {
+    "angular2-demo": {
+      "projectType": "application",
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/angular2-demo",
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "src/tsconfig.app.json",
+            "assets": [
+              "src/assets",
+              "src/favicon.png"
+            ],
+            "styles": [
+              "src/styles.css",
+              "node_modules/font-awesome/css/font-awesome.css",
+              "node_modules/ngx-bootstrap/datepicker/bs-datepicker.css"
+            ],
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/jqwidgets-framework/jqwidgets/jqxcore.js",
+              "node_modules/jqwidgets-framework/scripts/demos.js",
+              "node_modules/jqwidgets-framework/jqwidgets/jqxdata.js",
+              "node_modules/jqwidgets-framework/jqwidgets/jqxbuttons.js",
+              "node_modules/jqwidgets-framework/jqwidgets/jqxmenu.js",
+              "node_modules/jqwidgets-framework/jqwidgets/jqxscrollbar.js",
+              "node_modules/jqwidgets-framework/jqwidgets/jqxsortable.js",
+              "node_modules/jqwidgets-framework/jqwidgets/jqxtooltip.js",
+              "node_modules/jqwidgets-framework/jqwidgets/jqxdropdownlist.js",
+              "node_modules/jqwidgets-framework/jqwidgets/jqxlistbox.js",
+              "node_modules/jqwidgets-framework/jqwidgets/jqxgrid.js",
+              "node_modules/jqwidgets-framework/jqwidgets/jqxgrid.selection.js",
+              "node_modules/jqwidgets-framework/jqwidgets/jqxgrid.filter.js",
+              "node_modules/jqwidgets-framework/jqwidgets/jqxgrid.sort.js",
+              "node_modules/jqwidgets-framework/jqwidgets/jqxgrid.columnsresize.js",
+              "node_modules/jqwidgets-framework/jqwidgets/jqxgrid.pager.js",
+              "node_modules/jqwidgets-framework/jqwidgets/jqxgrid.grouping.js"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "angular2-demo:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "angular2-demo:build:production"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "src/test.ts",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "src/tsconfig.spec.json",
+            "karmaConfig": "src/karma.conf.js",
+            "styles": [
+              "src/styles.css"
+            ],
+            "scripts": [],
+            "assets": [
+              "src/assets",
+              "src/favicon.png"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "src/tsconfig.app.json",
+              "src/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "angular2-demo"
+}
